@@ -1,382 +1,462 @@
-const notesList = document.getElementById("notesList");
-const emptyListMessage = document.getElementById("emptyListMessage");
+const STORAGE_KEY = "paperTrailJournalEntries";
 
-const newNoteButton = document.getElementById("newNoteButton");
-const noteForm = document.getElementById("noteForm");
-const editorTitle = document.getElementById("editorTitle");
+const starterEntries = [
+  {
+    id: 1,
+    title: "Morning Reflection",
+    date: getToday(),
+    mood: "Peaceful",
+    tags: "Personal, Reflection",
+    content:
+`# Morning Reflection
+
+Today I am choosing to move with a calm mind.
+
+**Main focus:** build one meaningful thing well.
+
+- Stay present
+- Keep the work simple
+- Save the lesson
+- Return to peace
+
+> Small steps still count when they are taken with intention.`,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+];
+
+let entries = loadEntries();
+let activeEntryId = entries.length > 0 ? entries[0].id : null;
+
+const newEntryButton = document.getElementById("newEntryButton");
+const searchInput = document.getElementById("searchInput");
+const entryList = document.getElementById("entryList");
+const entryCount = document.getElementById("entryCount");
+
+const entryForm = document.getElementById("entryForm");
 const titleInput = document.getElementById("titleInput");
+const dateInput = document.getElementById("dateInput");
+const moodInput = document.getElementById("moodInput");
 const tagsInput = document.getElementById("tagsInput");
 const contentInput = document.getElementById("contentInput");
-const previewBox = document.getElementById("previewBox");
-const saveMessage = document.getElementById("saveMessage");
 
-const searchInput = document.getElementById("searchInput");
-const tagFilter = document.getElementById("tagFilter");
-const pinNoteButton = document.getElementById("pinNoteButton");
-const deleteNoteButton = document.getElementById("deleteNoteButton");
-const clearEditorButton = document.getElementById("clearEditorButton");
+const wordCount = document.getElementById("wordCount");
+const charCount = document.getElementById("charCount");
+const lastSaved = document.getElementById("lastSaved");
+const deleteEntryButton = document.getElementById("deleteEntryButton");
 
-const totalNotes = document.getElementById("totalNotes");
-const pinnedNotes = document.getElementById("pinnedNotes");
-const tagCount = document.getElementById("tagCount");
+const todayStamp = document.getElementById("todayStamp");
+const previewMood = document.getElementById("previewMood");
+const previewDate = document.getElementById("previewDate");
+const previewTags = document.getElementById("previewTags");
+const previewContent = document.getElementById("previewContent");
 
-let notes = JSON.parse(localStorage.getItem("markdownNotes")) || [];
-let activeNoteId = null;
+const toast = document.getElementById("toast");
 
-newNoteButton.addEventListener("click", function () {
-  clearEditor();
+todayStamp.textContent = formatDisplayDate(getToday());
+
+if (activeEntryId) {
+  loadEntry(activeEntryId);
+} else {
+  startNewEntry();
+}
+
+renderEntryList();
+updatePreview();
+
+newEntryButton.addEventListener("click", startNewEntry);
+searchInput.addEventListener("input", renderEntryList);
+
+entryForm.addEventListener("input", () => {
+  updatePreview();
+  updateCounts();
 });
 
-noteForm.addEventListener("submit", function (event) {
+entryForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  saveNote();
+  saveEntry();
 });
 
-titleInput.addEventListener("input", function () {
-  updatePreview();
-});
+deleteEntryButton.addEventListener("click", deleteActiveEntry);
 
-tagsInput.addEventListener("input", function () {
-  updatePreview();
-});
+entryList.addEventListener("click", (event) => {
+  const card = event.target.closest(".entry-card");
 
-contentInput.addEventListener("input", function () {
-  updatePreview();
-});
-
-searchInput.addEventListener("input", function () {
-  renderNotes();
-});
-
-tagFilter.addEventListener("change", function () {
-  renderNotes();
-});
-
-pinNoteButton.addEventListener("click", function () {
-  if (!activeNoteId) {
-    saveMessage.textContent = "Save the note before pinning it.";
+  if (!card) {
     return;
   }
 
-  notes = notes.map(function (note) {
-    if (note.id === activeNoteId) {
-      return {
-        ...note,
-        pinned: !note.pinned
-      };
-    }
-
-    return note;
-  });
-
-  saveNotes();
-  renderNotes();
-  loadNote(activeNoteId);
+  const entryId = Number(card.dataset.id);
+  loadEntry(entryId);
 });
 
-deleteNoteButton.addEventListener("click", function () {
-  if (!activeNoteId) {
-    clearEditor();
-    return;
-  }
+function startNewEntry() {
+  activeEntryId = null;
 
-  const confirmDelete = confirm("Delete this note?");
+  titleInput.value = "";
+  dateInput.value = getToday();
+  moodInput.value = "Peaceful";
+  tagsInput.value = "";
+  contentInput.value =
+`# New Journal Entry
 
-  if (confirmDelete) {
-    notes = notes.filter(function (note) {
-      return note.id !== activeNoteId;
-    });
+Write what is true today.
 
-    saveNotes();
-    clearEditor();
-    renderNotes();
-  }
-});
+- What happened?
+- What did I learn?
+- What needs my attention?
+- What am I grateful for?`;
 
-clearEditorButton.addEventListener("click", function () {
-  clearEditor();
-});
+  lastSaved.textContent = "Not saved yet";
+  deleteEntryButton.disabled = true;
 
-function saveNote() {
-  const title = titleInput.value.trim();
-  const tags = parseTags(tagsInput.value);
-  const content = contentInput.value.trim();
+  renderEntryList();
+  updatePreview();
+  updateCounts();
 
-  if (!title) {
-    saveMessage.textContent = "Please add a note title.";
-    return;
-  }
+  titleInput.focus();
+  showToast("New journal page opened.");
+}
 
-  if (activeNoteId) {
-    notes = notes.map(function (note) {
-      if (note.id === activeNoteId) {
-        return {
-          ...note,
-          title: title,
-          tags: tags,
-          content: content,
-          updatedAt: new Date().toISOString()
-        };
+function saveEntry() {
+  const title = titleInput.value.trim() || "Untitled Entry";
+  const now = new Date().toISOString();
+
+  if (activeEntryId) {
+    entries = entries.map((entry) => {
+      if (entry.id !== activeEntryId) {
+        return entry;
       }
 
-      return note;
+      return {
+        ...entry,
+        title: title,
+        date: dateInput.value || getToday(),
+        mood: moodInput.value,
+        tags: tagsInput.value.trim(),
+        content: contentInput.value.trim(),
+        updatedAt: now
+      };
     });
   } else {
-    const newNote = {
-      id: Date.now().toString(),
+    const newEntry = {
+      id: Date.now(),
       title: title,
-      tags: tags,
-      content: content,
-      pinned: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      date: dateInput.value || getToday(),
+      mood: moodInput.value,
+      tags: tagsInput.value.trim(),
+      content: contentInput.value.trim(),
+      createdAt: now,
+      updatedAt: now
     };
 
-    notes.unshift(newNote);
-    activeNoteId = newNote.id;
+    entries.unshift(newEntry);
+    activeEntryId = newEntry.id;
+    deleteEntryButton.disabled = false;
   }
 
-  saveNotes();
-  renderNotes();
-  updateTagFilter();
-  editorTitle.textContent = "Editing Note";
-  saveMessage.textContent = "Note saved locally.";
+  saveEntries();
+  renderEntryList();
+
+  lastSaved.textContent = `Last saved at ${formatTime(now)}`;
+  showToast("Journal entry saved.");
 }
 
-function saveNotes() {
-  localStorage.setItem("markdownNotes", JSON.stringify(notes));
+function loadEntry(entryId) {
+  const entry = entries.find((item) => item.id === entryId);
+
+  if (!entry) {
+    return;
+  }
+
+  activeEntryId = entry.id;
+
+  titleInput.value = entry.title;
+  dateInput.value = entry.date;
+  moodInput.value = entry.mood;
+  tagsInput.value = entry.tags;
+  contentInput.value = entry.content;
+
+  lastSaved.textContent = `Last saved at ${formatTime(entry.updatedAt)}`;
+  deleteEntryButton.disabled = false;
+
+  renderEntryList();
+  updatePreview();
+  updateCounts();
 }
 
-function renderNotes() {
-  notesList.innerHTML = "";
+function deleteActiveEntry() {
+  if (!activeEntryId) {
+    return;
+  }
 
-  const searchText = searchInput.value.toLowerCase().trim();
-  const selectedTag = tagFilter.value;
+  const confirmed = confirm("Delete this journal entry?");
 
-  const filteredNotes = notes
-    .filter(function (note) {
-      const tagText = note.tags.join(" ").toLowerCase();
+  if (!confirmed) {
+    return;
+  }
 
-      const matchesSearch =
-        note.title.toLowerCase().includes(searchText) ||
-        note.content.toLowerCase().includes(searchText) ||
-        tagText.includes(searchText);
+  entries = entries.filter((entry) => entry.id !== activeEntryId);
+  saveEntries();
 
-      const matchesTag =
-        selectedTag === "All" || note.tags.includes(selectedTag);
-
-      return matchesSearch && matchesTag;
-    })
-    .sort(function (a, b) {
-      if (a.pinned && !b.pinned) {
-        return -1;
-      }
-
-      if (!a.pinned && b.pinned) {
-        return 1;
-      }
-
-      return new Date(b.updatedAt) - new Date(a.updatedAt);
-    });
-
-  if (filteredNotes.length === 0) {
-    emptyListMessage.classList.add("show");
+  if (entries.length > 0) {
+    activeEntryId = entries[0].id;
+    loadEntry(activeEntryId);
   } else {
-    emptyListMessage.classList.remove("show");
+    startNewEntry();
   }
 
-  filteredNotes.forEach(function (note) {
-    const item = document.createElement("article");
-    item.className = "note-list-item";
+  renderEntryList();
+  showToast("Journal entry deleted.");
+}
 
-    if (note.id === activeNoteId) {
-      item.classList.add("active");
+function renderEntryList() {
+  const searchTerm = searchInput.value.toLowerCase().trim();
+
+  const filteredEntries = entries
+    .filter((entry) => {
+      const searchableText = `
+        ${entry.title}
+        ${entry.date}
+        ${entry.mood}
+        ${entry.tags}
+        ${entry.content}
+      `.toLowerCase();
+
+      return searchableText.includes(searchTerm);
+    })
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+  entryCount.textContent = filteredEntries.length;
+  entryList.innerHTML = "";
+
+  if (filteredEntries.length === 0) {
+    entryList.innerHTML = `
+      <div class="entry-card">
+        <strong>No entries found</strong>
+        <p>Try a different search or create a new entry.</p>
+      </div>
+    `;
+    return;
+  }
+
+  filteredEntries.forEach((entry) => {
+    const card = document.createElement("button");
+    card.className = "entry-card";
+    card.type = "button";
+    card.dataset.id = entry.id;
+
+    if (entry.id === activeEntryId) {
+      card.classList.add("active");
     }
 
-    item.addEventListener("click", function () {
-      loadNote(note.id);
-    });
+    const tags = getTagsArray(entry.tags)
+      .slice(0, 3)
+      .map((tag) => `<span>${escapeHTML(tag)}</span>`)
+      .join("");
 
-    const pinLabel = note.pinned ? `<p class="pin-label">Pinned</p>` : "";
+    card.innerHTML = `
+      <small>${formatDisplayDate(entry.date)} • ${escapeHTML(entry.mood)}</small>
+      <strong>${escapeHTML(entry.title)}</strong>
+      <p>${escapeHTML(getExcerpt(entry.content))}</p>
 
-    item.innerHTML = `
-      ${pinLabel}
-      <h3>${escapeHTML(note.title)}</h3>
-      <p>${getPreviewText(note.content)}</p>
-      <div class="note-tags">
-        ${note.tags.map(function (tag) {
-          return `<span class="note-tag">${escapeHTML(tag)}</span>`;
-        }).join("")}
+      <div class="entry-card-tags">
+        ${tags || "<span>No tags</span>"}
       </div>
     `;
 
-    notesList.appendChild(item);
+    entryList.appendChild(card);
   });
-
-  updateStats();
-}
-
-function loadNote(id) {
-  const note = notes.find(function (item) {
-    return item.id === id;
-  });
-
-  if (!note) {
-    return;
-  }
-
-  activeNoteId = note.id;
-  titleInput.value = note.title;
-  tagsInput.value = note.tags.join(", ");
-  contentInput.value = note.content;
-
-  editorTitle.textContent = "Editing Note";
-  pinNoteButton.textContent = note.pinned ? "Unpin" : "Pin";
-  saveMessage.textContent = "Note loaded.";
-
-  updatePreview();
-  renderNotes();
-}
-
-function clearEditor() {
-  activeNoteId = null;
-  titleInput.value = "";
-  tagsInput.value = "";
-  contentInput.value = "";
-
-  editorTitle.textContent = "New Note";
-  pinNoteButton.textContent = "Pin";
-  saveMessage.textContent = "Editor cleared.";
-  updatePreview();
-  renderNotes();
-}
-
-function parseTags(tagString) {
-  return tagString
-    .split(",")
-    .map(function (tag) {
-      return tag.trim();
-    })
-    .filter(function (tag) {
-      return tag !== "";
-    });
-}
-
-function updateTagFilter() {
-  const currentValue = tagFilter.value;
-  const tags = getAllTags();
-
-  tagFilter.innerHTML = `<option value="All">All Tags</option>`;
-
-  tags.forEach(function (tag) {
-    const option = document.createElement("option");
-    option.value = tag;
-    option.textContent = tag;
-    tagFilter.appendChild(option);
-  });
-
-  if (tags.includes(currentValue)) {
-    tagFilter.value = currentValue;
-  } else {
-    tagFilter.value = "All";
-  }
-}
-
-function getAllTags() {
-  const tagSet = new Set();
-
-  notes.forEach(function (note) {
-    note.tags.forEach(function (tag) {
-      tagSet.add(tag);
-    });
-  });
-
-  return Array.from(tagSet).sort();
-}
-
-function updateStats() {
-  totalNotes.textContent = notes.length;
-
-  pinnedNotes.textContent = notes.filter(function (note) {
-    return note.pinned;
-  }).length;
-
-  tagCount.textContent = getAllTags().length;
 }
 
 function updatePreview() {
+  const title = titleInput.value.trim() || "Untitled Entry";
+  const date = dateInput.value || getToday();
+  const mood = moodInput.value;
+  const tags = getTagsArray(tagsInput.value);
+
+  previewMood.textContent = mood;
+  previewDate.textContent = formatDisplayDate(date);
+
+  previewTags.innerHTML = tags.length
+    ? tags.map((tag) => `<span class="tag">${escapeHTML(tag)}</span>`).join("")
+    : `<span class="tag">No tags</span>`;
+
   const content = contentInput.value.trim();
 
   if (!content) {
-    previewBox.innerHTML = `<p class="preview-placeholder">Start typing to preview your markdown.</p>`;
+    previewContent.innerHTML = `
+      <h1>${escapeHTML(title)}</h1>
+      <p class="empty-preview">Start writing and your formatted journal page will appear here.</p>
+    `;
     return;
   }
 
-  previewBox.innerHTML = convertMarkdownToHTML(content);
+  previewContent.innerHTML = `
+    <h1>${escapeHTML(title)}</h1>
+    ${markdownToHTML(content)}
+  `;
 }
 
-function convertMarkdownToHTML(markdown) {
-  let html = escapeHTML(markdown);
+function updateCounts() {
+  const text = contentInput.value.trim();
+  const words = text ? text.split(/\s+/).length : 0;
+  const characters = contentInput.value.length;
 
-  html = html.replace(/^### (.*$)/gim, "<h3>$1</h3>");
-  html = html.replace(/^## (.*$)/gim, "<h2>$1</h2>");
-  html = html.replace(/^# (.*$)/gim, "<h1>$1</h1>");
+  wordCount.textContent = `${words} word${words === 1 ? "" : "s"}`;
+  charCount.textContent = `${characters} character${characters === 1 ? "" : "s"}`;
+}
 
-  html = html.replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>");
-  html = html.replace(/\*(.*?)\*/gim, "<em>$1</em>");
-  html = html.replace(/`(.*?)`/gim, "<code>$1</code>");
+function markdownToHTML(markdown) {
+  const escapedMarkdown = escapeHTML(markdown);
+  const lines = escapedMarkdown.split("\n");
 
-  html = html.replace(/^> (.*$)/gim, "<blockquote>$1</blockquote>");
+  let html = "";
+  let listOpen = false;
 
-  html = html.replace(/^- (.*$)/gim, "<li>$1</li>");
-  html = html.replace(/(<li>.*<\/li>)/gims, "<ul>$1</ul>");
+  lines.forEach((line) => {
+    const trimmed = line.trim();
 
-  html = html
-    .split(/\n{2,}/)
-    .map(function (block) {
-      const trimmed = block.trim();
-
-      if (
-        trimmed.startsWith("<h1>") ||
-        trimmed.startsWith("<h2>") ||
-        trimmed.startsWith("<h3>") ||
-        trimmed.startsWith("<ul>") ||
-        trimmed.startsWith("<blockquote>")
-      ) {
-        return trimmed;
+    if (trimmed === "") {
+      if (listOpen) {
+        html += "</ul>";
+        listOpen = false;
       }
 
-      return `<p>${trimmed.replace(/\n/g, "<br>")}</p>`;
-    })
-    .join("");
+      return;
+    }
+
+    if (trimmed.startsWith("- ")) {
+      if (!listOpen) {
+        html += "<ul>";
+        listOpen = true;
+      }
+
+      html += `<li>${parseInlineMarkdown(trimmed.slice(2))}</li>`;
+      return;
+    }
+
+    if (listOpen) {
+      html += "</ul>";
+      listOpen = false;
+    }
+
+    if (trimmed.startsWith("### ")) {
+      html += `<h3>${parseInlineMarkdown(trimmed.slice(4))}</h3>`;
+      return;
+    }
+
+    if (trimmed.startsWith("## ")) {
+      html += `<h2>${parseInlineMarkdown(trimmed.slice(3))}</h2>`;
+      return;
+    }
+
+    if (trimmed.startsWith("# ")) {
+      html += `<h1>${parseInlineMarkdown(trimmed.slice(2))}</h1>`;
+      return;
+    }
+
+    if (trimmed.startsWith("&gt; ")) {
+      html += `<blockquote>${parseInlineMarkdown(trimmed.slice(5))}</blockquote>`;
+      return;
+    }
+
+    html += `<p>${parseInlineMarkdown(trimmed)}</p>`;
+  });
+
+  if (listOpen) {
+    html += "</ul>";
+  }
 
   return html;
 }
 
-function getPreviewText(content) {
-  if (!content) {
-    return "No content yet.";
-  }
+function parseInlineMarkdown(text) {
+  return text
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*([^*]+)\*/g, "<em>$1</em>");
+}
 
-  const cleanText = content
-    .replace(/[#>*`-]/g, "")
-    .replace(/\n/g, " ")
+function getTagsArray(tagsText) {
+  return tagsText
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+}
+
+function getExcerpt(content) {
+  const plainText = content
+    .replaceAll("#", "")
+    .replaceAll("*", "")
+    .replaceAll("`", "")
+    .replaceAll(">", "")
+    .replaceAll("-", "")
     .trim();
 
-  if (cleanText.length > 80) {
-    return `${escapeHTML(cleanText.slice(0, 80))}...`;
+  if (plainText.length <= 82) {
+    return plainText || "Empty entry";
   }
 
-  return escapeHTML(cleanText);
+  return `${plainText.slice(0, 82)}...`;
+}
+
+function saveEntries() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+}
+
+function loadEntries() {
+  const savedEntries = localStorage.getItem(STORAGE_KEY);
+
+  if (!savedEntries) {
+    return [...starterEntries];
+  }
+
+  try {
+    return JSON.parse(savedEntries);
+  } catch (error) {
+    console.error("Could not load journal entries:", error);
+    return [...starterEntries];
+  }
+}
+
+function getToday() {
+  return new Date().toISOString().split("T")[0];
+}
+
+function formatDisplayDate(dateString) {
+  const date = new Date(`${dateString}T12:00:00`);
+
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+function formatTime(dateString) {
+  const date = new Date(dateString);
+
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit"
+  });
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2400);
 }
 
 function escapeHTML(text) {
-  return text
+  return String(text)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
-
-updateTagFilter();
-renderNotes();
-updatePreview();
