@@ -4,112 +4,159 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Markdown Notes App | Joel Foster</title>
+  <title>PaperTrail Journal | Markdown Notes App</title>
 
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="app">
-    <header class="hero">
-      <nav class="top-nav">
-        <a href="https://jfoster294.github.io/portfolio-site/" class="back-link">← Portfolio</a>
-        <p>Markdown Notes App</p>
-      </nav>
+  <div class="desk">
+    <aside class="journal-sidebar">
+      <div class="brand">
+        <div class="brand-icon">📖</div>
+        <div>
+          <h1>PaperTrail</h1>
+          <p>Markdown Journal</p>
+        </div>
+      </div>
 
-      <section class="hero-content">
-        <p class="eyebrow">Notes App</p>
-        <h1>Create, edit, and preview markdown notes.</h1>
-        <p>
-          Write notes in Markdown, preview formatted content, search your notes,
-          add tags, pin important notes, and save everything locally.
-        </p>
-      </section>
-    </header>
+      <button id="newEntryButton" class="new-entry-button" type="button">
+        + New Entry
+      </button>
 
-    <section class="stats-grid">
-      <article class="stat-card">
-        <p>Total Notes</p>
-        <h2 id="totalNotes">0</h2>
-      </article>
+      <div class="search-box">
+        <label for="searchInput">Search Entries</label>
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search title, mood, tags..."
+        />
+      </div>
 
-      <article class="stat-card">
-        <p>Pinned</p>
-        <h2 id="pinnedNotes">0</h2>
-      </article>
+      <div class="entry-list-header">
+        <h2>Saved Entries</h2>
+        <span id="entryCount">0</span>
+      </div>
 
-      <article class="stat-card">
-        <p>Tags</p>
-        <h2 id="tagCount">0</h2>
-      </article>
-    </section>
+      <div id="entryList" class="entry-list"></div>
 
-    <section class="notes-layout">
-      <aside class="sidebar-card">
-        <div class="sidebar-header">
-          <h2>Notes</h2>
-          <button id="newNoteButton" type="button">New Note</button>
+      <div class="privacy-card">
+        <strong>Private Browser Journal</strong>
+        <p>Your entries are saved locally in this browser using localStorage.</p>
+      </div>
+    </aside>
+
+    <main class="journal-book">
+      <section class="page editor-page">
+        <div class="page-top">
+          <div>
+            <p class="eyebrow">Writing Page</p>
+            <h2>Journal Entry</h2>
+          </div>
+
+          <div class="date-stamp" id="todayStamp"></div>
         </div>
 
-        <label for="searchInput">Search Notes</label>
-        <input type="text" id="searchInput" placeholder="Search by title, tag, or content" />
-
-        <label for="tagFilter">Filter Tag</label>
-        <select id="tagFilter">
-          <option value="All">All Tags</option>
-        </select>
-
-        <div id="notesList" class="notes-list"></div>
-
-        <section id="emptyListMessage" class="empty-list">
-          <h3>No notes found</h3>
-          <p>Create a note or adjust your filters.</p>
-        </section>
-      </aside>
-
-      <section class="editor-card">
-        <form id="noteForm">
-          <div class="editor-top">
-            <div>
-              <p class="editor-label">Editor</p>
-              <h2 id="editorTitle">New Note</h2>
+        <form id="entryForm" class="entry-form">
+          <div class="form-row">
+            <div class="form-group large">
+              <label for="titleInput">Entry Title</label>
+              <input
+                id="titleInput"
+                type="text"
+                placeholder="Morning reflection..."
+              />
             </div>
 
-            <div class="editor-actions">
-              <button id="pinNoteButton" class="secondary-button" type="button">Pin</button>
-              <button id="deleteNoteButton" class="danger-button" type="button">Delete</button>
+            <div class="form-group">
+              <label for="dateInput">Date</label>
+              <input id="dateInput" type="date" />
             </div>
           </div>
 
-          <label for="titleInput">Title</label>
-          <input type="text" id="titleInput" placeholder="Example: JavaScript Study Plan" required />
+          <div class="form-row">
+            <div class="form-group">
+              <label for="moodInput">Today's Mood</label>
+              <select id="moodInput">
+                <option>Peaceful</option>
+                <option>Focused</option>
+                <option>Grateful</option>
+                <option>Heavy</option>
+                <option>Inspired</option>
+                <option>Reflective</option>
+              </select>
+            </div>
 
-          <label for="tagsInput">Tags</label>
-          <input type="text" id="tagsInput" placeholder="Example: javascript, portfolio, study" />
-
-          <label for="contentInput">Markdown Content</label>
-          <textarea id="contentInput" placeholder="# Heading&#10;&#10;Write your markdown note here..."></textarea>
-
-          <div class="form-buttons">
-            <button type="submit" class="primary-button">Save Note</button>
-            <button id="clearEditorButton" type="button" class="secondary-button">Clear Editor</button>
+            <div class="form-group large">
+              <label for="tagsInput">Tags</label>
+              <input
+                id="tagsInput"
+                type="text"
+                placeholder="Personal, Goals, Prayer..."
+              />
+            </div>
           </div>
 
-          <p id="saveMessage" class="save-message">Notes save locally in your browser.</p>
+          <div class="form-group">
+            <label for="contentInput">Private Thoughts</label>
+            <textarea
+              id="contentInput"
+              class="journal-textarea"
+              placeholder="# Today I am writing about..."
+            ></textarea>
+          </div>
+
+          <div class="writing-stats">
+            <span id="wordCount">0 words</span>
+            <span id="charCount">0 characters</span>
+            <span id="lastSaved">Not saved yet</span>
+          </div>
+
+          <div class="button-row">
+            <button class="save-button" type="submit">
+              Save Entry
+            </button>
+
+            <button id="deleteEntryButton" class="delete-button" type="button">
+              Delete Entry
+            </button>
+          </div>
         </form>
+
+        <div class="markdown-help">
+          <h3>Markdown Guide</h3>
+
+          <div class="help-grid">
+            <code># Heading</code>
+            <code>**bold text**</code>
+            <code>*italic text*</code>
+            <code>- bullet item</code>
+            <code>&gt; quote</code>
+            <code>`inline code`</code>
+          </div>
+        </div>
       </section>
 
-      <section class="preview-card">
-        <div class="preview-header">
-          <p class="editor-label">Live Preview</p>
-          <h2>Preview</h2>
+      <section class="page preview-page">
+        <div class="page-top">
+          <div>
+            <p class="eyebrow">Live Preview</p>
+            <h2>Finished Page</h2>
+          </div>
+
+          <div class="mood-badge" id="previewMood">Peaceful</div>
         </div>
 
-        <article id="previewBox" class="preview-box">
-          <p class="preview-placeholder">Start typing to preview your markdown.</p>
+        <article class="preview-meta">
+          <p id="previewDate">Today</p>
+          <div id="previewTags" class="tag-row"></div>
         </article>
+
+        <article id="previewContent" class="preview-content"></article>
       </section>
-    </section>
-  </main>
+    </main>
+  </div>
+
+  <div id="toast" class="toast"></div>
 
   <script src="script.js"></script>
 </body>
