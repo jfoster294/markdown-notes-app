@@ -47,19 +47,19 @@ button {
 }
 
 .desk {
-  width: min(1500px, calc(100% - 32px));
+  width: min(1720px, calc(100% - 22px));
   min-height: 100vh;
   margin: 0 auto;
-  padding: 22px 0;
+  padding: 14px 0;
   display: grid;
-  grid-template-columns: 310px 1fr;
-  gap: 22px;
+  grid-template-columns: 270px minmax(0, 1fr);
+  gap: 16px;
 }
 
 .journal-sidebar {
   position: sticky;
-  top: 22px;
-  height: calc(100vh - 44px);
+  top: 14px;
+  height: calc(100vh - 28px);
   overflow-y: auto;
   border: 1px solid rgba(255, 225, 175, 0.12);
   border-radius: var(--radius-lg);
@@ -67,7 +67,7 @@ button {
     linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent),
     linear-gradient(180deg, var(--leather), var(--leather-dark));
   color: #ffe9c4;
-  padding: 20px;
+  padding: 18px;
   box-shadow: var(--shadow);
 }
 
@@ -81,25 +81,25 @@ button {
 }
 
 .brand-icon {
-  width: 58px;
-  height: 58px;
+  width: 54px;
+  height: 54px;
   display: grid;
   place-items: center;
   border-radius: 18px;
   background: rgba(255, 233, 196, 0.12);
   border: 1px solid rgba(255, 233, 196, 0.2);
-  font-size: 2rem;
+  font-size: 1.9rem;
 }
 
 .brand h1 {
-  font-size: 2rem;
+  font-size: 1.75rem;
   line-height: 1;
 }
 
 .brand p {
   margin-top: 5px;
   color: #d6af7d;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.11em;
   font-weight: 700;
@@ -172,7 +172,7 @@ button {
 }
 
 .entry-list-header h2 {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
 }
 
 .entry-list-header span {
@@ -257,9 +257,9 @@ button {
 
 .journal-book {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.15fr 1fr;
   gap: 0;
-  min-height: calc(100vh - 44px);
+  min-height: calc(100vh - 28px);
   border-radius: 32px;
   background:
     linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 3%, transparent 97%, rgba(0, 0, 0, 0.18)),
@@ -270,8 +270,8 @@ button {
 
 .page {
   position: relative;
-  min-height: calc(100vh - 44px);
-  padding: 32px;
+  min-height: calc(100vh - 28px);
+  padding: 30px;
   background:
     repeating-linear-gradient(
       to bottom,
@@ -332,8 +332,7 @@ button {
   line-height: 1;
 }
 
-.date-stamp,
-.mood-badge {
+.date-stamp {
   border: 1px solid rgba(74, 36, 21, 0.18);
   border-radius: 999px;
   padding: 9px 12px;
@@ -355,8 +354,8 @@ button {
   margin-bottom: 12px;
 }
 
-.form-row:nth-child(2) {
-  grid-template-columns: 190px 1fr;
+.single-row {
+  grid-template-columns: 1fr;
 }
 
 .form-group {
@@ -364,7 +363,7 @@ button {
 }
 
 .journal-textarea {
-  min-height: 430px;
+  min-height: 560px;
   resize: vertical;
   line-height: 34px;
   font-size: 1.05rem;
@@ -580,7 +579,7 @@ button {
   }
 
   .form-row,
-  .form-row:nth-child(2),
+  .single-row,
   .help-grid {
     grid-template-columns: 1fr;
   }
@@ -596,6 +595,6 @@ button {
   }
 
   .journal-textarea {
-    min-height: 330px;
+    min-height: 380px;
   }
 }
