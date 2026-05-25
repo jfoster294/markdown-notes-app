@@ -5,7 +5,6 @@ const starterEntries = [
     id: 1,
     title: "Morning Reflection",
     date: getToday(),
-    mood: "Peaceful",
     tags: "Personal, Reflection",
     content:
 `# Morning Reflection
@@ -36,7 +35,6 @@ const entryCount = document.getElementById("entryCount");
 const entryForm = document.getElementById("entryForm");
 const titleInput = document.getElementById("titleInput");
 const dateInput = document.getElementById("dateInput");
-const moodInput = document.getElementById("moodInput");
 const tagsInput = document.getElementById("tagsInput");
 const contentInput = document.getElementById("contentInput");
 
@@ -46,7 +44,6 @@ const lastSaved = document.getElementById("lastSaved");
 const deleteEntryButton = document.getElementById("deleteEntryButton");
 
 const todayStamp = document.getElementById("todayStamp");
-const previewMood = document.getElementById("previewMood");
 const previewDate = document.getElementById("previewDate");
 const previewTags = document.getElementById("previewTags");
 const previewContent = document.getElementById("previewContent");
@@ -95,7 +92,6 @@ function startNewEntry() {
 
   titleInput.value = "";
   dateInput.value = getToday();
-  moodInput.value = "Peaceful";
   tagsInput.value = "";
   contentInput.value =
 `# New Journal Entry
@@ -132,7 +128,6 @@ function saveEntry() {
         ...entry,
         title: title,
         date: dateInput.value || getToday(),
-        mood: moodInput.value,
         tags: tagsInput.value.trim(),
         content: contentInput.value.trim(),
         updatedAt: now
@@ -143,7 +138,6 @@ function saveEntry() {
       id: Date.now(),
       title: title,
       date: dateInput.value || getToday(),
-      mood: moodInput.value,
       tags: tagsInput.value.trim(),
       content: contentInput.value.trim(),
       createdAt: now,
@@ -173,8 +167,7 @@ function loadEntry(entryId) {
 
   titleInput.value = entry.title;
   dateInput.value = entry.date;
-  moodInput.value = entry.mood;
-  tagsInput.value = entry.tags;
+  tagsInput.value = entry.tags || "";
   contentInput.value = entry.content;
 
   lastSaved.textContent = `Last saved at ${formatTime(entry.updatedAt)}`;
@@ -218,7 +211,6 @@ function renderEntryList() {
       const searchableText = `
         ${entry.title}
         ${entry.date}
-        ${entry.mood}
         ${entry.tags}
         ${entry.content}
       `.toLowerCase();
@@ -250,13 +242,13 @@ function renderEntryList() {
       card.classList.add("active");
     }
 
-    const tags = getTagsArray(entry.tags)
+    const tags = getTagsArray(entry.tags || "")
       .slice(0, 3)
       .map((tag) => `<span>${escapeHTML(tag)}</span>`)
       .join("");
 
     card.innerHTML = `
-      <small>${formatDisplayDate(entry.date)} • ${escapeHTML(entry.mood)}</small>
+      <small>${formatDisplayDate(entry.date)}</small>
       <strong>${escapeHTML(entry.title)}</strong>
       <p>${escapeHTML(getExcerpt(entry.content))}</p>
 
@@ -272,10 +264,8 @@ function renderEntryList() {
 function updatePreview() {
   const title = titleInput.value.trim() || "Untitled Entry";
   const date = dateInput.value || getToday();
-  const mood = moodInput.value;
   const tags = getTagsArray(tagsInput.value);
 
-  previewMood.textContent = mood;
   previewDate.textContent = formatDisplayDate(date);
 
   previewTags.innerHTML = tags.length
@@ -413,7 +403,13 @@ function loadEntries() {
   }
 
   try {
-    return JSON.parse(savedEntries);
+    const parsedEntries = JSON.parse(savedEntries);
+
+    return parsedEntries.map((entry) => {
+      const cleanedEntry = { ...entry };
+      delete cleanedEntry.mood;
+      return cleanedEntry;
+    });
   } catch (error) {
     console.error("Could not load journal entries:", error);
     return [...starterEntries];
