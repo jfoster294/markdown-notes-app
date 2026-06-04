@@ -1,30 +1,125 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>PaperTrail Journal | Markdown Notes App</title>
+  <title>PaperTrail Journal | 3D Guided Journal</title>
 
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="desk">
-    <aside class="journal-sidebar">
+  <div class="app-shell">
+    <aside class="control-panel">
       <div class="brand">
         <div class="brand-icon">📖</div>
+
         <div>
+          <p class="eyebrow">3D Guided Journal</p>
           <h1>PaperTrail</h1>
-          <p>Markdown Journal</p>
         </div>
       </div>
 
-      <button id="newEntryButton" class="new-entry-button" type="button">
-        + New Entry
-      </button>
+      <p class="panel-intro">
+        Open the journal, build your Compass, tug the page corner, and save private pages with text, images, video, and audio.
+      </p>
+
+      <div class="panel-actions">
+        <button id="openJournalButton" class="primary-button" type="button">
+          Open Journal
+        </button>
+
+        <button id="newEntryButton" class="secondary-button" type="button">
+          New Page
+        </button>
+      </div>
+
+      <div class="compass-picker">
+        <label for="activeCompassSelect">Active Journal Compass</label>
+
+        <div class="select-row">
+          <select id="activeCompassSelect"></select>
+
+          <button id="toggleCompassButton" type="button">
+            Edit
+          </button>
+        </div>
+      </div>
+
+      <section id="compassDrawer" class="compass-drawer" hidden>
+        <div class="drawer-header">
+          <div>
+            <p class="eyebrow">Journal Compass</p>
+            <h2>Build Your Compass</h2>
+          </div>
+
+          <button id="closeCompassButton" class="icon-button" type="button" aria-label="Close Compass panel">
+            ×
+          </button>
+        </div>
+
+        <p class="drawer-note">
+          The starter Compass is built for self-improvement across the 12 areas of life. You can change the equation, wording, order, and life areas.
+        </p>
+
+        <div class="compass-form">
+          <label>
+            Compass Icon
+            <input id="compassIconInput" type="text" maxlength="2" />
+          </label>
+
+          <label>
+            Compass Name
+            <input id="compassNameInput" type="text" />
+          </label>
+
+          <label>
+            Compass Description
+            <textarea id="compassDescriptionInput" rows="3"></textarea>
+          </label>
+
+          <label>
+            Life Areas
+            <textarea id="lifeAreasInput" rows="6"></textarea>
+            <span class="field-help">Put each life area on its own line.</span>
+          </label>
+        </div>
+
+        <div class="equation-preview-card">
+          <span>Reflection Equation</span>
+          <strong id="equationText"></strong>
+        </div>
+
+        <div class="equation-toolbar">
+          <button id="addEquationPartButton" type="button">
+            + Add Part
+          </button>
+
+          <button id="resetStarterEquationButton" type="button">
+            Reset Starter
+          </button>
+        </div>
+
+        <div id="equationPartList" class="equation-part-list"></div>
+
+        <div class="drawer-actions">
+          <button id="saveCompassButton" class="primary-button" type="button">
+            Save Compass
+          </button>
+
+          <button id="createCompassButton" class="secondary-button" type="button">
+            New Compass
+          </button>
+
+          <button id="deleteCompassButton" class="danger-outline-button" type="button">
+            Delete Compass
+          </button>
+        </div>
+      </section>
 
       <div class="search-box">
-        <label for="searchInput">Search Entries</label>
+        <label for="searchInput">Search Saved Pages</label>
         <input
           id="searchInput"
           type="text"
@@ -33,7 +128,7 @@
       </div>
 
       <div class="entry-list-header">
-        <h2>Saved Entries</h2>
+        <h2>Saved Pages</h2>
         <span id="entryCount">0</span>
       </div>
 
@@ -41,103 +136,172 @@
 
       <div class="privacy-card">
         <strong>Private Browser Journal</strong>
-        <p>Your entries are saved locally in this browser using localStorage.</p>
+        <p>
+          Entries are saved in localStorage. Media memories are stored in IndexedDB inside this browser.
+        </p>
       </div>
     </aside>
 
-    <main class="journal-book">
-      <section class="page editor-page">
-        <div class="page-top">
-          <div>
-            <p class="eyebrow">Writing Page</p>
-            <h2>Journal Entry</h2>
-          </div>
-
-          <div class="date-stamp" id="todayStamp"></div>
+    <main class="journal-stage">
+      <div class="stage-top">
+        <div>
+          <p class="eyebrow">Immersive Writing Desk</p>
+          <h2>Open the journal and turn the page</h2>
         </div>
 
-        <form id="entryForm" class="entry-form">
-          <div class="form-row">
-            <div class="form-group large">
-              <label for="titleInput">Entry Title</label>
-              <input
-                id="titleInput"
-                type="text"
-                placeholder="Morning reflection..."
-              />
+        <div class="page-controls">
+          <button id="previousPageButton" type="button">
+            Previous
+          </button>
+
+          <button id="nextPageButton" type="button">
+            Next
+          </button>
+        </div>
+      </div>
+
+      <section id="bookShell" class="book-shell closed">
+        <div class="desk-shadow"></div>
+
+        <div class="book">
+          <div class="book-back"></div>
+          <div class="book-spine"></div>
+
+          <section class="page left-page">
+            <div class="page-header">
+              <div>
+                <p class="eyebrow">Finished Page</p>
+                <h3 id="previewTitle">Untitled Entry</h3>
+              </div>
+
+              <span id="previewDate" class="date-pill">Today</span>
             </div>
 
-            <div class="form-group">
-              <label for="dateInput">Date</label>
-              <input id="dateInput" type="date" />
+            <div id="previewTags" class="tag-row"></div>
+
+            <article id="previewContent" class="preview-content"></article>
+
+            <div class="preview-media-section">
+              <div class="section-title-row">
+                <h4>Memory Attachments</h4>
+              </div>
+
+              <div id="previewMediaList" class="media-grid"></div>
             </div>
-          </div>
+          </section>
 
-          <div class="form-row single-row">
-            <div class="form-group large">
-              <label for="tagsInput">Tags</label>
-              <input
-                id="tagsInput"
-                type="text"
-                placeholder="Personal, Goals, Prayer..."
-              />
+          <section class="page right-page">
+            <div class="page-header">
+              <div>
+                <p class="eyebrow">Writing Page</p>
+                <h3>Private Entry</h3>
+              </div>
+
+              <span id="todayStamp" class="date-pill">Today</span>
             </div>
-          </div>
 
-          <div class="form-group">
-            <label for="contentInput">Private Thoughts</label>
-            <textarea
-              id="contentInput"
-              class="journal-textarea"
-              placeholder="# Today I am writing about..."
-            ></textarea>
-          </div>
+            <form id="entryForm" class="entry-form">
+              <div class="field-grid">
+                <label>
+                  Entry Title
+                  <input
+                    id="titleInput"
+                    type="text"
+                    placeholder="Morning reflection..."
+                  />
+                </label>
 
-          <div class="writing-stats">
-            <span id="wordCount">0 words</span>
-            <span id="charCount">0 characters</span>
-            <span id="lastSaved">Not saved yet</span>
-          </div>
+                <label>
+                  Date
+                  <input id="dateInput" type="date" />
+                </label>
+              </div>
 
-          <div class="button-row">
-            <button class="save-button" type="submit">
-              Save Entry
+              <label>
+                Tags
+                <input
+                  id="tagsInput"
+                  type="text"
+                  placeholder="Personal, Goals, Prayer..."
+                />
+              </label>
+
+              <label>
+                Private Thoughts
+                <textarea
+                  id="contentInput"
+                  placeholder="# Today I am writing about..."
+                ></textarea>
+              </label>
+
+              <div class="memory-shelf">
+                <div>
+                  <h4>Memory Shelf</h4>
+                  <p>Add images, videos, or audio to this journal page.</p>
+                </div>
+
+                <label class="upload-button">
+                  Add Memory
+                  <input
+                    id="mediaFileInput"
+                    type="file"
+                    accept="image/*,video/*,audio/*"
+                    multiple
+                  />
+                </label>
+              </div>
+
+              <div id="mediaList" class="media-grid"></div>
+
+              <div class="writing-stats">
+                <span id="wordCount">0 words</span>
+                <span id="charCount">0 characters</span>
+              </div>
+
+              <div class="journal-actions">
+                <button class="save-button" type="submit">
+                  Save Page
+                </button>
+
+                <button id="deleteEntryButton" class="delete-button" type="button">
+                  Delete
+                </button>
+              </div>
+
+              <p id="lastSaved" class="last-saved">Not saved yet</p>
+            </form>
+
+            <button id="pageCorner" class="page-corner" type="button" aria-label="Drag to turn page">
+              <span>Pull</span>
             </button>
+          </section>
 
-            <button id="deleteEntryButton" class="delete-button" type="button">
-              Delete Entry
-            </button>
+          <div id="turningPage" class="turning-page">
+            <div class="turning-front">
+              <span>Keep pulling...</span>
+            </div>
+
+            <div class="turning-back">
+              <span>Next page</span>
+            </div>
           </div>
-        </form>
 
-        <div class="markdown-help">
-          <h3>Markdown Guide</h3>
+          <button id="frontCover" class="front-cover" type="button">
+            <div class="cover-texture"></div>
 
-          <div class="help-grid">
-            <code># Heading</code>
-            <code>**bold text**</code>
-            <code>*italic text*</code>
-            <code>- bullet item</code>
-            <code>&gt; quote</code>
-            <code>`inline code`</code>
-          </div>
-        </div>
-      </section>
+            <div class="cover-content">
+              <p>PaperTrail</p>
+              <h2>Private Journal</h2>
+              <span>Click to open</span>
+            </div>
 
-      <section class="page preview-page">
-        <div class="page-top">
-          <div>
-            <p class="eyebrow">Live Preview</p>
-            <h2>Finished Page</h2>
-          </div>
+            <div class="cover-band"></div>
+          </button>
         </div>
 
-        <article class="preview-meta">
-          <p id="previewDate">Today</p>
-          <div id="previewTags" class="tag-row"></div>
-        </article>
-
-        <article id="previewContent" class="preview-content"></article>
+        <p class="gesture-hint">
+          Tug the bottom-right page corner with your mouse or finger to turn the page.
+        </p>
       </section>
     </main>
   </div>
@@ -147,3 +311,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
