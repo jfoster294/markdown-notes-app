@@ -1,143 +1,50 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!--
-    ============================================================
-    PAPERTRAIL JOURNAL - INDEX.HTML
-    ============================================================
-
-    This file is the structure of the app.
-
-    BIG DESIGN CHANGE:
-    - The app now has two main screens:
-      1. Main Journal Screen
-      2. Compass Screen
-
-    WHY:
-    - The old right-side Compass panel made the app feel crowded.
-    - The new Compass screen matches the mockup style better.
-    - The journal screen now feels cleaner, wider, and more premium.
-
-    FILES USED:
-    - index.html = page structure
-    - style.css = visual design
-    - script.js = saving, loading, clicking, localStorage behavior
-
-    OPTIONAL FUTURE ASSETS:
-    Later, we can add an assets folder for AI-generated images:
-
-    assets/
-      journal-desk-bg.png
-      compass-hero-bg.png
-      compass-icon.png
-
-    For now, the design will work with CSS only.
-  -->
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>PaperTrail Journal | Guided Reflection App</title>
+  <title>Journal</title>
 
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <!--
-    ============================================================
-    APP SHELL
-    ============================================================
-
-    This wraps the entire app.
-    It keeps the dashboard centered and gives the page its full-screen layout.
-  -->
   <div class="app-shell">
 
-    <!--
-      ============================================================
-      TOP NAVIGATION BAR
-      ============================================================
-
-      This top bar appears on both screens.
-
-      Buttons:
-      - New Page: opens a blank journal page
-      - Save: saves the current journal entry
-      - Compass: switches to the Compass screen
-      - Entries: switches back to the main Journal screen
-    -->
+    <!-- TOP BAR -->
     <header class="top-bar">
-      <a class="brand" href="#" aria-label="PaperTrail home">
-        <span class="brand-mark">✒</span>
+      <a class="brand" href="#">
+        <span class="brand-icon">✦</span>
         <span>PaperTrail</span>
       </a>
 
-      <nav class="top-actions" aria-label="Main journal navigation">
+      <nav class="top-actions">
         <button id="newEntryButton" class="top-button" type="button">
-          <span>＋</span>
-          New Page
+          ＋ New Page
         </button>
 
-        <button id="saveEntryButton" class="top-button primary-button" type="button">
-          <span>▣</span>
-          Save
-        </button>
-
-        <button id="compassButton" class="top-button" type="button">
-          <span>◉</span>
-          Compass
+        <button id="saveEntryButton" class="top-button save-top-button" type="button">
+          ▣ Save
         </button>
 
         <button id="entriesButton" class="top-button active" type="button">
-          <span>▤</span>
-          Entries
+          ▤ Entries
+        </button>
+
+        <button id="compassButton" class="top-button" type="button">
+          ◉ Compass
         </button>
       </nav>
 
-      <div class="top-icons">
-        <button id="searchFocusButton" class="circle-button" type="button" aria-label="Focus search">
-          ⌕
-        </button>
-
-        <button class="circle-button profile-button" type="button" aria-label="Profile">
-          JF
-        </button>
-      </div>
+      <div class="profile-pill">JF</div>
     </header>
 
-    <!--
-      ============================================================
-      MAIN JOURNAL SCREEN
-      ============================================================
+    <!-- JOURNAL VIEW -->
+    <main id="journalView" class="view active-view">
 
-      This is the default screen when the app opens.
-
-      Layout:
-      - Left side: saved pages
-      - Center/right: open journal book
-
-      This screen opens:
-      - The most recent saved page if entries exist
-      - A blank page if this is the first time using the app
-    -->
-    <main id="journalView" class="view-screen journal-view active-view">
-
-      <!--
-        ============================================================
-        SAVED PAGES PANEL
-        ============================================================
-
-        This is the left sidebar from the mockup.
-
-        JavaScript updates:
-        - entryCount
-        - entryList
-
-        JavaScript reads:
-        - searchInput
-      -->
-      <aside id="entriesPanel" class="entries-panel">
+      <!-- SAVED ENTRIES -->
+      <aside class="entries-panel">
         <div class="panel-header">
           <div>
             <p class="eyebrow">Saved Pages</p>
@@ -147,181 +54,81 @@
           <span id="entryCount" class="count-pill">0</span>
         </div>
 
-        <div class="search-box">
-          <span class="search-icon">⌕</span>
-
-          <input
-            id="searchInput"
-            type="text"
-            placeholder="Search entries..."
-            aria-label="Search saved journal entries"
-          />
-        </div>
+        <input
+          id="searchInput"
+          class="search-input"
+          type="text"
+          placeholder="Search entries..."
+        />
 
         <div id="entryList" class="entry-list"></div>
 
-        <button id="newEntryPanelButton" class="wide-action-button" type="button">
+        <button id="newEntryPanelButton" class="wide-button" type="button">
           ＋ New Page
         </button>
       </aside>
 
-      <!--
-        ============================================================
-        JOURNAL BOOK AREA
-        ============================================================
+      <!-- JOURNAL BOOK -->
+      <section class="journal-area">
+        <div class="book">
 
-        This is the main visual section.
+          <!-- LEFT PREVIEW PAGE -->
+          <section class="page preview-page">
+            <p class="page-label">Reflection Preview</p>
 
-        It is designed to look like an open journal sitting on a dark desk.
-      -->
-      <section class="journal-stage" aria-label="Open journal workspace">
+            <p id="previewDate" class="preview-date">Today</p>
+            <h1 id="previewTitle" class="preview-title">Untitled Entry</h1>
 
-        <!-- Decorative background objects.
-             These are CSS-only right now.
-             Later, we can replace/enhance them with AI images. -->
-        <div class="desk-glow"></div>
-        <div class="desk-leaf"></div>
-        <div class="desk-cup"></div>
-
-        <div class="journal-book">
-
-          <!-- Decorative book pieces -->
-          <div class="book-cover"></div>
-          <div class="book-spine"></div>
-          <div class="bookmark-ribbon"></div>
-          <div class="pen-decoration"></div>
-
-          <!--
-            ============================================================
-            LEFT PAGE - LIVE PREVIEW
-            ============================================================
-
-            This page shows how the final journal entry looks.
-
-            JavaScript updates:
-            - previewDate
-            - previewTitle
-            - previewTags
-            - previewContent
-            - previewMediaList
-          -->
-          <section class="book-page preview-page">
-            <div class="page-label">Reflection</div>
-
-            <div class="preview-heading">
-              <p id="previewDate">Today</p>
-              <h1 id="previewTitle">Untitled Entry</h1>
-              <div id="previewTags" class="tag-row"></div>
-            </div>
-
-            <div class="page-divider">
-              <span>✦</span>
-            </div>
+            <div id="previewTags" class="tag-row"></div>
 
             <article id="previewContent" class="preview-content">
-              <p class="empty-preview">
-                Your finished journal page will appear here.
-              </p>
+              <p class="empty-text">Your finished journal page will appear here.</p>
             </article>
 
-            <section class="preview-memory-section">
-              <div class="section-title-row">
-                <h3>Memory Attachments</h3>
-              </div>
-
-              <div id="previewMediaList" class="media-grid preview-media-grid"></div>
-            </section>
+            <div class="memory-section">
+              <h3>Memory Attachments</h3>
+              <div id="previewMediaList" class="media-grid"></div>
+            </div>
           </section>
 
-          <!--
-            ============================================================
-            RIGHT PAGE - WRITING FORM
-            ============================================================
-
-            This page is where the user writes.
-
-            JavaScript reads:
-            - titleInput
-            - dateInput
-            - tagsInput
-            - contentInput
-            - mediaFileInput
-
-            JavaScript updates:
-            - wordCount
-            - charCount
-            - lastSaved
-            - mediaList
-          -->
-          <section class="book-page writing-page">
-            <div class="page-label">New Entry</div>
+          <!-- RIGHT WRITING PAGE -->
+          <section class="page writing-page">
+            <p class="page-label">Write</p>
 
             <form id="entryForm" class="entry-form">
-              <label class="field-group">
-                <span>Title</span>
-
-                <input
-                  id="titleInput"
-                  type="text"
-                  placeholder="A Day of Clarity"
-                />
+              <label>
+                Title
+                <input id="titleInput" type="text" placeholder="A Day of Clarity" />
               </label>
 
-              <div class="field-grid">
-                <label class="field-group">
-                  <span>Date</span>
-
+              <div class="field-row">
+                <label>
+                  Date
                   <input id="dateInput" type="date" />
                 </label>
 
-                <label class="field-group">
-                  <span>Tags</span>
-
-                  <input
-                    id="tagsInput"
-                    type="text"
-                    placeholder="#clarity, #growth, #mindset"
-                  />
+                <label>
+                  Tags
+                  <input id="tagsInput" type="text" placeholder="#clarity, #growth" />
                 </label>
               </div>
 
-              <!--
-                Mini toolbar.
-                In this updated version, these buttons will actually insert
-                simple markdown into the writing box using script.js.
-              -->
-              <div class="mini-toolbar" aria-label="Writing tools">
-                <button class="format-button" type="button" data-format="bold">B</button>
-                <button class="format-button italic" type="button" data-format="italic">I</button>
-                <button class="format-button underline" type="button" data-format="heading">H</button>
-                <button class="format-button" type="button" data-format="list">≡</button>
-                <button class="format-button" type="button" data-format="quote">❝</button>
-                <button class="format-button" type="button" data-format="link">⌁</button>
-              </div>
-
-              <label class="field-group">
-                <span>Your Thoughts</span>
-
+              <label>
+                Thoughts
                 <textarea
                   id="contentInput"
-                  placeholder="Write your thoughts here..."
+                  placeholder="Start writing your thoughts..."
                 ></textarea>
               </label>
 
-              <!--
-                Memory upload section.
-                This keeps the app useful without making the design messy.
-              -->
-              <section class="memory-upload-box">
+              <div class="upload-box">
                 <div>
-                  <h3>Attach Memory</h3>
-                  <p>Drop images here or click to upload.</p>
+                  <h3>Memory Shelf</h3>
+                  <p>Add images, video, or audio.</p>
                 </div>
 
                 <label class="upload-button">
-                  <span>▧</span>
                   Add Memory
-
                   <input
                     id="mediaFileInput"
                     type="file"
@@ -329,20 +136,18 @@
                     multiple
                   />
                 </label>
-              </section>
+              </div>
 
               <div id="mediaList" class="media-grid"></div>
 
-              <div class="writing-footer">
-                <div class="writing-stats">
-                  <span id="wordCount">0 words</span>
-                  <span id="charCount">0 characters</span>
-                </div>
-
-                <p id="lastSaved">Not saved yet</p>
+              <div class="stats-row">
+                <span id="wordCount">0 words</span>
+                <span id="charCount">0 characters</span>
               </div>
 
-              <div class="entry-actions">
+              <p id="lastSaved" class="last-saved">Not saved yet</p>
+
+              <div class="button-row">
                 <button class="save-button" type="submit">
                   Save Page
                 </button>
@@ -357,172 +162,63 @@
       </section>
     </main>
 
-    <!--
-      ============================================================
-      COMPASS SCREEN
-      ============================================================
-
-      This is now a separate screen.
-
-      This replaces the old right-side Compass panel.
-
-      REMOVED FROM OLD VERSION:
-      - Active Compass select box
-      - Icon input
-      - Name input
-      - Description input
-      - Create Compass button
-      - Delete Compass button
-      - Complicated equation editor
-
-      NEW VERSION:
-      - Simple prompt cards
-      - Clicking a prompt generates a guided page
-      - Back button returns to the journal
-    -->
-    <main id="compassView" class="view-screen compass-view">
+    <!-- COMPASS VIEW -->
+    <main id="compassView" class="view compass-view">
 
       <section class="compass-card">
         <button id="backToJournalButton" class="back-button" type="button">
-          ← Back
+          ← Back to Journal
         </button>
 
         <div class="compass-hero">
-          <div class="compass-orb">
-            ✦
-          </div>
-
+          <div class="compass-orb">✦</div>
           <h1>Your Compass</h1>
-
-          <p>
-            Reflect. Gain clarity. Stay aligned.
-          </p>
+          <p>Choose a guided reflection to create a journal page.</p>
         </div>
 
-        <div class="compass-divider">
-          <span></span>
-        </div>
-
-        <!--
-          COMPASS PROMPT CARDS
-
-          Each button has a data-template value.
-          script.js uses that value to decide what guided page to generate.
-        -->
-        <div class="prompt-list" aria-label="Compass reflection prompts">
-
+        <div class="prompt-list">
           <button class="prompt-card" type="button" data-template="learn">
-            <span class="prompt-icon purple-icon">♧</span>
-
-            <span class="prompt-copy">
+            <span>♧</span>
+            <div>
               <strong>What did I learn today?</strong>
-              <small>Capture your lessons, insights, and growth.</small>
-            </span>
-
-            <span class="prompt-arrow">›</span>
+              <small>Lessons, insights, and growth.</small>
+            </div>
           </button>
 
           <button class="prompt-card" type="button" data-template="gratitude">
-            <span class="prompt-icon blue-icon">♡</span>
-
-            <span class="prompt-copy">
+            <span>♡</span>
+            <div>
               <strong>What am I grateful for?</strong>
-              <small>Focus on the good, no matter how small.</small>
-            </span>
-
-            <span class="prompt-arrow">›</span>
+              <small>Focus on what is good.</small>
+            </div>
           </button>
 
           <button class="prompt-card" type="button" data-template="goals">
-            <span class="prompt-icon green-icon">◎</span>
-
-            <span class="prompt-copy">
+            <span>◎</span>
+            <div>
               <strong>What are my goals?</strong>
-              <small>Stay focused on what matters.</small>
-            </span>
-
-            <span class="prompt-arrow">›</span>
+              <small>Clarify direction and next steps.</small>
+            </div>
           </button>
 
           <button class="prompt-card" type="button" data-template="improve">
-            <span class="prompt-icon orange-icon">✧</span>
-
-            <span class="prompt-copy">
+            <span>✧</span>
+            <div>
               <strong>What can I improve?</strong>
-              <small>Identify growth areas and next steps.</small>
-            </span>
-
-            <span class="prompt-arrow">›</span>
-          </button>
-
-          <button class="prompt-card" type="button" data-template="free">
-            <span class="prompt-icon cyan-icon">◇</span>
-
-            <span class="prompt-copy">
-              <strong>Free Reflection</strong>
-              <small>Write anything on your mind.</small>
-            </span>
-
-            <span class="prompt-arrow">›</span>
+              <small>Notice patterns and grow.</small>
+            </div>
           </button>
         </div>
 
-        <button id="generateGuidedPageButton" class="wide-action-button compass-wide-button" type="button">
+        <button id="generateGuidedPageButton" class="wide-button compass-wide" type="button">
           Generate Full Guided Page
         </button>
       </section>
-
-      <!--
-        Right-side feature notes.
-        These visually match the mockup but stay simple.
-      -->
-      <aside class="compass-notes" aria-label="Compass design notes">
-        <article class="note-card">
-          <span class="note-icon blue-note">✦</span>
-          <h3>Clean & Modern</h3>
-          <p>Dark theme with soft blues, purples, and subtle accents.</p>
-        </article>
-
-        <article class="note-card">
-          <span class="note-icon purple-note">▤</span>
-          <h3>Open Journal Book Style</h3>
-          <p>Realistic, clean, minimal, and focused on writing.</p>
-        </article>
-
-        <article class="note-card">
-          <span class="note-icon green-note">◌</span>
-          <h3>Compass on Separate Page</h3>
-          <p>Opens when clicked. Simple and focused.</p>
-        </article>
-
-        <article class="note-card">
-          <span class="note-icon orange-note">ϟ</span>
-          <h3>No Clutter</h3>
-          <p>Removed unnecessary boxes and fields.</p>
-        </article>
-
-        <article class="note-card">
-          <span class="note-icon blue-note">▯</span>
-          <h3>Fully Responsive</h3>
-          <p>Looks great on desktop, tablet, and mobile.</p>
-        </article>
-      </aside>
     </main>
   </div>
 
-  <!--
-    ============================================================
-    TOAST MESSAGE
-    ============================================================
-
-    JavaScript uses this for small pop-up messages like:
-    - Page saved
-    - Page deleted
-    - Guided page generated
-  -->
   <div id="toast" class="toast"></div>
 
-  <!-- Connects this HTML file to the JavaScript file -->
   <script src="script.js"></script>
 </body>
 </html>
