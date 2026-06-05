@@ -1,4 +1,3 @@
-
 /*
   ============================================================
   PAPERTRAIL JOURNAL - SCRIPT.JS
@@ -509,6 +508,12 @@ function renderEntryList() {
   });
 }
 
+
+
+
+
+
+
 /* ============================================================
    LIVE PREVIEW
    ============================================================ */
@@ -544,6 +549,15 @@ function updateCounts() {
    COMPASS GUIDED PAGES
    ============================================================ */
 
+/*
+  This function creates a guided journal page from the Compass screen.
+
+  Example:
+  - User clicks "What am I grateful for?"
+  - JavaScript loads the gratitude template
+  - The app fills the journal writing area with that template
+  - Then it sends the user back to the Journal screen
+*/
 function generateGuidedPage(templateName) {
   const hasWriting =
     titleInput.value.trim() ||
@@ -581,6 +595,13 @@ function generateGuidedPage(templateName) {
   showToast("Compass page generated.");
 }
 
+/*
+  These are the actual Compass templates.
+
+  EASY TO EDIT:
+  If you want to change the guided questions later, edit the text inside
+  each content section below.
+*/
 function getCompassTemplate(templateName) {
   const templates = {
     learn: {
@@ -750,12 +771,13 @@ What is one grounded action I can take next?`
 /*
   These buttons insert markdown into the textarea.
 
-  B = **bold**
-  I = *italic*
-  H = heading
-  list = bullet point
-  quote = blockquote
-  link = link format
+  Toolbar meanings:
+  - B = bold
+  - I = italic
+  - H = heading
+  - list icon = bullet point
+  - quote icon = blockquote
+  - link icon = markdown link
 */
 function insertMarkdown(formatType) {
   const start = contentInput.selectionStart;
@@ -785,7 +807,9 @@ function insertMarkdown(formatType) {
   }
 
   if (formatType === "link") {
-    replacement = selectedText ? `[${selectedText}](https://example.com)` : "[link text](https://example.com)";
+    replacement = selectedText
+      ? `[${selectedText}](https://example.com)`
+      : "[link text](https://example.com)";
   }
 
   contentInput.setRangeText(replacement, start, end, "end");
@@ -811,8 +835,9 @@ function insertMarkdown(formatType) {
   - **bold**
   - *italic*
   - `code`
+  - [links](https://example.com)
 
-  It intentionally stays simple for beginner-friendly code.
+  It intentionally stays beginner-friendly.
 */
 function markdownToHTML(markdown) {
   const escapedMarkdown = escapeHTML(markdown);
@@ -878,6 +903,12 @@ function markdownToHTML(markdown) {
   return html;
 }
 
+/*
+  This handles inline markdown inside paragraphs.
+
+  IMPORTANT:
+  This corrected function is the one that avoids the broken copied regex.
+*/
 function parseInlineMarkdown(text) {
   return text
     .replace(/`([^`]+)`/g, "<code>$1</code>")
