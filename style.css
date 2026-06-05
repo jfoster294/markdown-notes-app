@@ -1,34 +1,4 @@
 
-/*
-  ============================================================
-  PAPERTRAIL JOURNAL - STYLE.CSS
-  ============================================================
-
-  This file controls the LOOK of the app.
-
-  NEW DESIGN GOAL:
-  - Match the dark premium mockup style
-  - Remove the old brown / wood-heavy look
-  - Create a clean midnight-blue interface
-  - Keep the open journal book as the main visual focus
-  - Make Compass its own separate screen
-
-  EASY COLOR CHANGES:
-  If you want to change the whole design later, start with the
-  :root variables below.
-
-  Main colors:
-  --bg: main background
-  --panel: dark card panels
-  --blue: main button / active glow
-  --purple: Compass glow
-  --paper: journal page color
-*/
-
-/* ============================================================
-   RESET
-   ============================================================ */
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -36,76 +6,33 @@
 }
 
 :root {
-  --bg: #040812;
-  --bg-2: #071225;
-  --panel: rgba(12, 20, 38, 0.88);
-  --panel-strong: rgba(8, 14, 28, 0.96);
-  --panel-soft: rgba(17, 28, 52, 0.78);
-  --border: rgba(139, 170, 225, 0.18);
-  --border-bright: rgba(88, 145, 255, 0.55);
-
-  --text: #f5f7ff;
-  --text-soft: rgba(245, 247, 255, 0.72);
-  --text-muted: rgba(245, 247, 255, 0.52);
-
+  --bg: #050914;
+  --panel: #0d1628;
+  --panel-light: #13213a;
   --blue: #3b82f6;
-  --blue-bright: #60a5fa;
-  --blue-deep: #1d4ed8;
-
   --purple: #a855f7;
-  --purple-bright: #c084fc;
-
-  --green: #22c55e;
-  --orange: #fb923c;
-  --cyan: #22d3ee;
-  --danger: #ef4444;
-
-  --paper: #f2ece3;
-  --paper-soft: #faf5ec;
-  --paper-dark: #d6c5ad;
-  --paper-ink: #101827;
-  --paper-muted: #687086;
-
-  --shadow: rgba(0, 0, 0, 0.5);
-  --radius-xl: 28px;
-  --radius-lg: 20px;
-  --radius-md: 14px;
-  --radius-sm: 10px;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --paper: #f7efe3;
+  --paper-dark: #e4d4bc;
+  --ink: #111827;
+  --danger: #dc2626;
+  --border: rgba(148, 163, 184, 0.2);
 }
 
 body {
   min-height: 100vh;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: Arial, sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(59, 130, 246, 0.18), transparent 28%),
-    radial-gradient(circle at top right, rgba(168, 85, 247, 0.18), transparent 26%),
-    radial-gradient(circle at bottom, rgba(15, 23, 42, 0.9), transparent 44%),
-    linear-gradient(135deg, #020617, #071225 48%, #020617);
-  overflow-x: hidden;
-}
-
-/*
-  This gives the whole page a subtle premium texture.
-  It is CSS-only, so you do not need an image file yet.
-*/
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.65), transparent);
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.22), transparent 28%),
+    radial-gradient(circle at top right, rgba(168, 85, 247, 0.22), transparent 28%),
+    linear-gradient(135deg, #020617, #071225);
 }
 
 button,
 input,
-textarea,
-select {
+textarea {
   font: inherit;
 }
 
@@ -113,828 +40,375 @@ button {
   cursor: pointer;
 }
 
-input,
-textarea,
-select {
-  width: 100%;
-  border: 1px solid rgba(30, 41, 59, 0.22);
-  border-radius: 10px;
-  padding: 11px 12px;
-  color: var(--paper-ink);
-  background: rgba(255, 255, 255, 0.46);
-  outline: none;
-}
-
-textarea {
-  resize: vertical;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: rgba(59, 130, 246, 0.7);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.16);
-}
-
-/* ============================================================
-   MAIN APP SHELL
-   ============================================================ */
-
 .app-shell {
-  width: min(1800px, 100%);
+  width: min(1600px, 100%);
   min-height: 100vh;
   margin: 0 auto;
-  padding: 14px;
+  padding: 16px;
   display: grid;
   grid-template-rows: auto 1fr;
-  gap: 14px;
+  gap: 16px;
 }
 
-/* ============================================================
-   TOP BAR
-   ============================================================ */
+/* TOP BAR */
 
 .top-bar {
-  min-height: 78px;
+  min-height: 76px;
   display: grid;
-  grid-template-columns: 250px 1fr 150px;
+  grid-template-columns: 230px 1fr 70px;
   align-items: center;
-  gap: 18px;
-  padding: 12px 20px;
+  gap: 16px;
+  padding: 14px 18px;
   border: 1px solid var(--border);
-  border-radius: 24px;
-  background:
-    linear-gradient(180deg, rgba(13, 23, 43, 0.96), rgba(4, 10, 22, 0.94)),
-    radial-gradient(circle at top, rgba(59, 130, 246, 0.16), transparent 48%);
-  box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.38),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(18px);
+  border-radius: 22px;
+  background: rgba(13, 22, 40, 0.92);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   color: var(--text);
   text-decoration: none;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.6rem, 2vw, 2.25rem);
+  font-size: 1.8rem;
   font-weight: 900;
-  letter-spacing: -0.04em;
 }
 
-.brand-mark {
-  color: #f4d9b1;
-  font-size: 1.5rem;
-  text-shadow: 0 0 20px rgba(244, 217, 177, 0.25);
+.brand-icon {
+  color: #facc15;
 }
 
 .top-actions {
   display: flex;
   justify-content: center;
-  gap: 14px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
 .top-button,
-.circle-button {
-  border: 1px solid var(--border);
-  color: var(--text);
-  background:
-    linear-gradient(180deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.85));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 10px 22px rgba(0, 0, 0, 0.18);
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.top-button {
-  min-height: 46px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
+.wide-button,
+.save-button,
+.delete-button,
+.back-button,
+.prompt-card {
+  border: 0;
   border-radius: 12px;
-  padding: 10px 18px;
   font-weight: 800;
 }
 
+.top-button {
+  padding: 12px 16px;
+  color: var(--text);
+  background: var(--panel-light);
+  border: 1px solid var(--border);
+}
+
 .top-button:hover,
-.circle-button:hover {
-  transform: translateY(-1px);
-  border-color: rgba(96, 165, 250, 0.55);
-  box-shadow:
-    0 0 0 3px rgba(59, 130, 246, 0.12),
-    0 14px 26px rgba(0, 0, 0, 0.22);
-}
-
 .top-button.active {
-  border-color: rgba(96, 165, 250, 0.78);
-  background:
-    linear-gradient(180deg, rgba(37, 99, 235, 0.35), rgba(15, 23, 42, 0.9));
-  box-shadow:
-    0 0 0 3px rgba(59, 130, 246, 0.14),
-    0 0 24px rgba(59, 130, 246, 0.22);
+  background: var(--blue);
 }
 
-.primary-button {
-  border-color: rgba(96, 165, 250, 0.65);
-  background:
-    linear-gradient(135deg, #2563eb, #1d4ed8);
-  box-shadow:
-    0 0 28px rgba(59, 130, 246, 0.26),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+.save-top-button,
+.save-button,
+.wide-button {
+  color: white;
+  background: linear-gradient(135deg, var(--blue), #1d4ed8);
 }
 
-.top-icons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.circle-button {
+.profile-pill {
   width: 46px;
   height: 46px;
-  border-radius: 999px;
   display: grid;
   place-items: center;
+  border-radius: 999px;
+  color: var(--ink);
   font-weight: 900;
+  background: white;
 }
 
-.profile-button {
-  color: #0f172a;
-  border: 0;
-  background:
-    linear-gradient(135deg, #f8fafc, #cbd5e1);
-}
+/* VIEWS */
 
-/* ============================================================
-   SCREEN SWITCHING
-   ============================================================ */
-
-/*
-  JavaScript will add and remove .active-view.
-
-  Only the active screen is visible:
-  - journalView
-  - compassView
-*/
-
-.view-screen {
+.view {
   display: none;
-  min-height: calc(100vh - 108px);
 }
 
-.view-screen.active-view {
+.active-view {
   display: grid;
 }
 
-/* ============================================================
-   JOURNAL MAIN SCREEN
-   ============================================================ */
+/* JOURNAL VIEW */
 
-.journal-view {
-  grid-template-columns: 270px minmax(0, 1fr);
-  gap: 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  background:
-    linear-gradient(90deg, rgba(3, 7, 18, 0.94), rgba(8, 15, 31, 0.82)),
-    radial-gradient(circle at 72% 12%, rgba(34, 197, 94, 0.08), transparent 22%),
-    radial-gradient(circle at 32% 8%, rgba(251, 146, 60, 0.08), transparent 22%);
-  box-shadow:
-    0 24px 70px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+#journalView {
+  grid-template-columns: 280px 1fr;
+  gap: 16px;
+  min-height: calc(100vh - 110px);
 }
-
-/* ============================================================
-   LEFT ENTRIES PANEL
-   ============================================================ */
 
 .entries-panel {
-  min-height: 100%;
-  padding: 24px 18px;
   display: grid;
   grid-template-rows: auto auto 1fr auto;
-  gap: 16px;
-  border-right: 1px solid var(--border);
-  background:
-    linear-gradient(180deg, rgba(13, 23, 43, 0.96), rgba(4, 10, 22, 0.96));
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: rgba(13, 22, 40, 0.95);
 }
 
 .panel-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  align-items: center;
 }
 
 .eyebrow {
-  color: var(--blue-bright);
+  color: var(--blue);
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  font-size: 0.7rem;
   font-weight: 900;
 }
 
 .panel-header h2 {
-  margin-top: 4px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.55rem;
-  letter-spacing: -0.04em;
+  margin-top: 5px;
+  font-size: 1.5rem;
 }
 
 .count-pill {
-  min-width: 38px;
+  min-width: 36px;
   height: 34px;
-  border-radius: 999px;
   display: grid;
   place-items: center;
-  color: white;
+  border-radius: 999px;
+  background: var(--blue);
   font-weight: 900;
-  background:
-    linear-gradient(135deg, #2563eb, #1e40af);
-  box-shadow: 0 0 24px rgba(59, 130, 246, 0.28);
 }
 
-.search-box {
-  position: relative;
-}
-
-.search-icon {
-  position: absolute;
-  left: 13px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-  pointer-events: none;
-}
-
-.search-box input {
-  height: 46px;
-  padding-left: 38px;
-  color: var(--text);
+.search-input {
+  width: 100%;
   border: 1px solid var(--border);
-  background: rgba(15, 23, 42, 0.78);
-}
-
-.search-box input::placeholder {
-  color: var(--text-muted);
+  border-radius: 12px;
+  padding: 12px;
+  color: var(--text);
+  background: #071225;
+  outline: none;
 }
 
 .entry-list {
-  min-height: 0;
   display: grid;
   align-content: start;
-  gap: 12px;
+  gap: 10px;
   overflow: auto;
-  padding-right: 3px;
-}
-
-.entry-list::-webkit-scrollbar {
-  width: 7px;
-}
-
-.entry-list::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: rgba(96, 165, 250, 0.28);
 }
 
 .entry-card {
   width: 100%;
-  position: relative;
-  min-height: 84px;
   display: grid;
-  gap: 7px;
+  gap: 6px;
+  padding: 13px;
   text-align: left;
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 13px 14px;
   color: var(--text);
-  background:
-    linear-gradient(180deg, rgba(21, 33, 60, 0.92), rgba(10, 18, 35, 0.88));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 10px 20px rgba(0, 0, 0, 0.16);
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.entry-card::before {
-  content: "";
-  position: absolute;
-  left: 13px;
-  top: 17px;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--blue);
-  box-shadow: 0 0 16px rgba(59, 130, 246, 0.75);
+  background: var(--panel-light);
 }
 
 .entry-card:hover,
 .entry-card.active {
-  transform: translateY(-1px);
-  border-color: rgba(96, 165, 250, 0.7);
-  background:
-    linear-gradient(180deg, rgba(37, 99, 235, 0.42), rgba(12, 22, 45, 0.92));
-  box-shadow:
-    0 0 0 3px rgba(59, 130, 246, 0.12),
-    0 18px 28px rgba(0, 0, 0, 0.22);
-}
-
-.entry-card strong {
-  display: block;
-  padding-left: 16px;
-  padding-right: 18px;
-  color: var(--text);
-  font-size: 0.92rem;
-  line-height: 1.25;
+  border-color: var(--blue);
+  background: rgba(59, 130, 246, 0.25);
 }
 
 .entry-card small {
-  display: block;
-  padding-left: 16px;
-  color: var(--text-soft);
-  font-size: 0.77rem;
-}
-
-.entry-card p {
-  display: none;
+  color: var(--muted);
 }
 
 .entry-card-tags {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
-  padding-left: 16px;
 }
 
 .entry-card-tags span {
-  color: rgba(219, 234, 254, 0.9);
-  font-size: 0.74rem;
+  color: #bfdbfe;
+  font-size: 0.75rem;
 }
 
-.entry-thumb {
-  display: none;
-}
+/* JOURNAL BOOK */
 
-.wide-action-button {
-  width: 100%;
-  min-height: 50px;
-  border: 1px solid rgba(96, 165, 250, 0.55);
-  border-radius: 12px;
-  padding: 12px 14px;
-  color: var(--text);
-  font-weight: 900;
-  background:
-    linear-gradient(135deg, #2563eb, #1e40af);
-  box-shadow:
-    0 0 24px rgba(59, 130, 246, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.wide-action-button:hover {
-  transform: translateY(-1px);
-  box-shadow:
-    0 0 32px rgba(59, 130, 246, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
-}
-
-/* ============================================================
-   JOURNAL STAGE / DESK
-   ============================================================ */
-
-.journal-stage {
-  position: relative;
-  min-width: 0;
-  min-height: 100%;
+.journal-area {
   display: grid;
   place-items: center;
-  padding: 44px 28px;
-  overflow: hidden;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
   background:
-    radial-gradient(circle at 12% 8%, rgba(251, 146, 60, 0.16), transparent 16%),
-    radial-gradient(circle at 92% 4%, rgba(34, 197, 94, 0.12), transparent 16%),
-    linear-gradient(135deg, rgba(6, 12, 24, 0.78), rgba(2, 6, 14, 0.95));
+    radial-gradient(circle at top, rgba(59, 130, 246, 0.12), transparent 35%),
+    rgba(2, 6, 23, 0.72);
 }
 
-/*
-  These decorative pieces mimic the mockup without requiring images yet.
-*/
-
-.desk-glow {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at center, rgba(255, 255, 255, 0.05), transparent 34%),
-    repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.025) 0,
-      rgba(255, 255, 255, 0.025) 1px,
-      transparent 1px,
-      transparent 90px
-    );
-  opacity: 0.72;
-}
-
-.desk-cup {
-  position: absolute;
-  top: 24px;
-  left: 38px;
-  width: 120px;
-  height: 120px;
-  border-radius: 999px;
-  opacity: 0.28;
-  background:
-    radial-gradient(circle at center, transparent 0 38%, rgba(251, 191, 36, 0.75) 39% 42%, rgba(15, 23, 42, 0.7) 43%),
-    radial-gradient(circle at center, rgba(251, 191, 36, 0.4), transparent 62%);
-  filter: blur(0.2px);
-}
-
-.desk-leaf {
-  position: absolute;
-  top: -18px;
-  right: 12px;
-  width: 180px;
-  height: 120px;
-  opacity: 0.22;
-  background:
-    radial-gradient(ellipse at 70% 50%, rgba(34, 197, 94, 0.85), transparent 56%),
-    radial-gradient(ellipse at 42% 36%, rgba(22, 163, 74, 0.65), transparent 52%);
-  transform: rotate(-12deg);
-}
-
-/* ============================================================
-   OPEN JOURNAL BOOK
-   ============================================================ */
-
-.journal-book {
-  position: relative;
-  z-index: 2;
-  width: min(1040px, 100%);
-  min-height: 720px;
+.book {
+  width: min(980px, 100%);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding: 26px 34px 36px;
-  filter: drop-shadow(0 34px 42px rgba(0, 0, 0, 0.52));
+  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.45));
 }
 
-/*
-  Book cover behind both pages.
-*/
-.book-cover {
-  position: absolute;
-  inset: 8px 10px 14px;
-  z-index: 0;
-  border-radius: 28px;
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.38), transparent 17%, transparent 83%, rgba(0, 0, 0, 0.34)),
-    linear-gradient(135deg, #1f2937, #0f172a 48%, #020617);
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  box-shadow:
-    inset 0 0 50px rgba(0, 0, 0, 0.54),
-    0 25px 60px rgba(0, 0, 0, 0.5);
-}
-
-/*
-  Center spine between pages.
-*/
-.book-spine {
-  position: absolute;
-  top: 30px;
-  bottom: 34px;
-  left: calc(50% - 10px);
-  z-index: 4;
-  width: 20px;
-  border-radius: 999px;
-  background:
-    linear-gradient(90deg, #020617, #1e3a8a 45%, #020617);
-  box-shadow:
-    inset 0 0 14px rgba(255, 255, 255, 0.08),
-    0 0 26px rgba(37, 99, 235, 0.28);
-}
-
-.bookmark-ribbon {
-  position: absolute;
-  left: calc(50% - 9px);
-  top: 26px;
-  z-index: 5;
-  width: 26px;
-  height: 132px;
-  background:
-    linear-gradient(180deg, #1d4ed8, #0f172a);
-  clip-path: polygon(0 0, 100% 0, 100% 82%, 50% 100%, 0 82%);
-  box-shadow: 0 18px 24px rgba(0, 0, 0, 0.32);
-}
-
-.pen-decoration {
-  position: absolute;
-  z-index: 7;
-  left: calc(50% - 6px);
-  top: 290px;
-  width: 14px;
-  height: 310px;
-  border-radius: 999px;
-  background:
-    linear-gradient(90deg, #020617, #fbbf24 26%, #111827 34%, #020617 72%, #fbbf24 90%);
-  box-shadow:
-    0 10px 22px rgba(0, 0, 0, 0.35),
-    0 0 20px rgba(251, 191, 36, 0.2);
-  transform: rotate(5deg);
-}
-
-/*
-  Journal pages.
-*/
-.book-page {
-  position: relative;
-  z-index: 1;
-  min-height: 650px;
-  max-height: 650px;
+.page {
+  min-height: 640px;
+  max-height: 640px;
   overflow: auto;
-  padding: 46px;
-  color: var(--paper-ink);
+  padding: 36px;
+  color: var(--ink);
   background:
-    radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.75), transparent 28%),
     repeating-linear-gradient(
       to bottom,
       transparent 0,
-      transparent 34px,
-      rgba(15, 23, 42, 0.045) 35px
+      transparent 32px,
+      rgba(15, 23, 42, 0.07) 33px
     ),
-    linear-gradient(135deg, var(--paper-soft), var(--paper) 55%, var(--paper-dark));
-  box-shadow:
-    inset 0 0 34px rgba(15, 23, 42, 0.08),
-    0 10px 24px rgba(0, 0, 0, 0.18);
-}
-
-.book-page::-webkit-scrollbar {
-  width: 7px;
-}
-
-.book-page::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: rgba(30, 41, 59, 0.22);
+    linear-gradient(135deg, var(--paper), var(--paper-dark));
 }
 
 .preview-page {
-  border-radius: 24px 8px 8px 24px;
-  border-right: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 24px 6px 6px 24px;
 }
 
 .writing-page {
-  border-radius: 8px 24px 24px 8px;
-  border-left: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 6px 24px 24px 6px;
 }
 
 .page-label {
   text-align: center;
-  color: #1d4ed8;
+  color: #2563eb;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  font-size: 0.75rem;
   font-weight: 900;
-  margin-bottom: 28px;
+  margin-bottom: 18px;
 }
 
-.page-label::after {
-  content: "";
-  width: 32px;
-  height: 2px;
-  display: block;
-  margin: 10px auto 0;
-  border-radius: 999px;
-  background: var(--blue);
-}
-
-/* ============================================================
-   PREVIEW PAGE
-   ============================================================ */
-
-.preview-heading {
+.preview-date {
   text-align: center;
-  margin-bottom: 22px;
+  color: #2563eb;
+  font-weight: 800;
 }
 
-.preview-heading p {
-  color: #1d4ed8;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1rem;
-}
-
-.preview-heading h1 {
-  margin: 16px 0 18px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2rem, 3vw, 3rem);
-  line-height: 1.02;
-  letter-spacing: -0.05em;
+.preview-title {
+  margin: 10px 0 12px;
+  text-align: center;
+  font-size: 2.3rem;
+  line-height: 1;
 }
 
 .tag-row {
   display: flex;
   justify-content: center;
-  gap: 9px;
+  gap: 8px;
   flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
 .tag {
   border-radius: 999px;
-  padding: 7px 11px;
-  color: #0f172a;
+  padding: 5px 9px;
+  background: rgba(59, 130, 246, 0.18);
   font-size: 0.75rem;
   font-weight: 900;
-  background: rgba(96, 165, 250, 0.22);
-}
-
-.page-divider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 26px 0;
-  color: #1d4ed8;
-}
-
-.page-divider::before,
-.page-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: rgba(15, 23, 42, 0.14);
 }
 
 .preview-content {
-  min-height: 170px;
-  line-height: 1.62;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.02rem;
+  line-height: 1.6;
 }
 
 .preview-content h1,
 .preview-content h2,
 .preview-content h3 {
-  margin: 18px 0 9px;
-  line-height: 1.14;
-  letter-spacing: -0.03em;
+  margin: 14px 0 8px;
 }
 
 .preview-content p {
-  margin: 11px 0;
+  margin: 8px 0;
 }
 
 .preview-content ul {
-  margin: 10px 0 10px 22px;
+  margin-left: 20px;
 }
 
 .preview-content blockquote {
-  margin: 15px 0;
-  padding: 11px 13px;
-  border-left: 4px solid rgba(37, 99, 235, 0.5);
-  color: #334155;
-  background: rgba(96, 165, 250, 0.1);
+  margin: 12px 0;
+  padding: 10px 12px;
+  border-left: 4px solid #2563eb;
+  background: rgba(59, 130, 246, 0.12);
 }
 
-.preview-content code {
-  border-radius: 6px;
-  padding: 2px 5px;
-  background: rgba(15, 23, 42, 0.08);
-}
-
-.empty-preview {
-  color: var(--paper-muted);
+.empty-text {
+  color: #64748b;
   text-align: center;
-  margin-top: 70px;
+  margin-top: 60px;
 }
 
-.preview-memory-section {
-  margin-top: 36px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(15, 23, 42, 0.12);
-}
-
-.section-title-row h3,
-.memory-upload-box h3 {
-  color: var(--paper-ink);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.78rem;
-}
-
-/* ============================================================
-   WRITING FORM
-   ============================================================ */
+/* FORM */
 
 .entry-form {
   display: grid;
-  gap: 16px;
+  gap: 14px;
 }
 
-.field-grid {
+.entry-form label {
   display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
-  gap: 12px;
-}
-
-.field-group {
-  display: grid;
-  gap: 8px;
-  color: var(--paper-ink);
-  font-size: 0.82rem;
+  gap: 7px;
+  font-size: 0.85rem;
   font-weight: 900;
 }
 
-.field-group span {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 12px;
 }
 
-.field-group span::before {
-  content: "✦";
-  color: #1d4ed8;
-  font-size: 0.58rem;
+input,
+textarea {
+  width: 100%;
+  border: 1px solid rgba(15, 23, 42, 0.18);
+  border-radius: 10px;
+  padding: 11px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.55);
+  outline: none;
 }
 
-#contentInput {
+textarea {
   min-height: 230px;
-  line-height: 1.55;
+  resize: vertical;
 }
 
-.mini-toolbar {
-  min-height: 44px;
+.upload-box {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 12px;
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.28);
-}
-
-.format-button {
-  width: 32px;
-  height: 30px;
-  border: 0;
-  border-radius: 8px;
-  color: var(--paper-ink);
-  font-weight: 900;
-  background: transparent;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.format-button:hover {
-  transform: translateY(-1px);
-  background: rgba(59, 130, 246, 0.14);
-}
-
-.format-button.italic {
-  font-style: italic;
-}
-
-.format-button.underline {
-  text-decoration: underline;
-}
-
-.memory-upload-box {
-  display: grid;
+  justify-content: space-between;
   gap: 12px;
-  border: 1px dashed rgba(15, 23, 42, 0.22);
+  padding: 13px;
+  border: 1px dashed rgba(15, 23, 42, 0.25);
   border-radius: 14px;
-  padding: 16px;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.25);
 }
 
-.memory-upload-box p {
-  margin-top: 6px;
-  color: var(--paper-muted);
-  font-size: 0.78rem;
+.upload-box p {
+  color: #64748b;
+  font-size: 0.8rem;
+  margin-top: 4px;
 }
 
 .upload-button {
   position: relative;
-  min-height: 54px;
   display: grid;
   place-items: center;
-  gap: 4px;
+  min-width: 120px;
   border-radius: 12px;
-  padding: 12px;
-  color: #1e3a8a;
+  color: white;
   font-weight: 900;
-  background: rgba(96, 165, 250, 0.12);
-  border: 1px solid rgba(59, 130, 246, 0.18);
+  background: var(--blue);
   overflow: hidden;
 }
 
@@ -942,86 +416,69 @@ select:focus {
   position: absolute;
   inset: 0;
   opacity: 0;
-  cursor: pointer;
 }
 
-.writing-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  color: var(--paper-muted);
-  font-size: 0.78rem;
-}
-
-.writing-stats {
-  display: flex;
-  gap: 9px;
-  flex-wrap: wrap;
-}
-
-.entry-actions {
+.stats-row,
+.button-row {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.stats-row,
+.last-saved {
+  color: #64748b;
+  font-size: 0.8rem;
 }
 
 .save-button,
 .delete-button {
-  border: 0;
-  border-radius: 12px;
   padding: 12px 15px;
-  font-weight: 900;
-}
-
-.save-button {
-  color: white;
-  background:
-    linear-gradient(135deg, #2563eb, #1e40af);
-  box-shadow: 0 12px 22px rgba(37, 99, 235, 0.22);
 }
 
 .delete-button {
-  color: #fee2e2;
-  background: #991b1b;
+  color: white;
+  background: var(--danger);
 }
 
 .delete-button:disabled {
+  opacity: 0.45;
   cursor: not-allowed;
-  opacity: 0.42;
 }
 
-/* ============================================================
-   MEDIA CARDS
-   ============================================================ */
+/* MEDIA */
 
 .media-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px;
 }
 
-.preview-media-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.memory-section {
+  margin-top: 30px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(15, 23, 42, 0.15);
+}
+
+.memory-section h3 {
+  margin-bottom: 10px;
+  font-size: 0.85rem;
 }
 
 .media-card {
   position: relative;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 12px;
   padding: 7px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.28);
-  overflow: hidden;
 }
 
 .media-card img,
 .media-card video {
   width: 100%;
-  height: 92px;
+  height: 90px;
   object-fit: cover;
   display: block;
   border-radius: 9px;
-  background: #020617;
 }
 
 .media-card audio {
@@ -1030,8 +487,7 @@ select:focus {
 
 .media-card strong {
   display: block;
-  margin-top: 7px;
-  color: var(--paper-ink);
+  margin-top: 6px;
   font-size: 0.72rem;
   white-space: nowrap;
   overflow: hidden;
@@ -1039,454 +495,188 @@ select:focus {
 }
 
 .media-card small {
-  color: var(--paper-muted);
+  color: #64748b;
   font-size: 0.68rem;
 }
 
 .remove-media {
   position: absolute;
-  top: 7px;
-  right: 7px;
-  z-index: 2;
-  width: 27px;
-  height: 27px;
+  top: 6px;
+  right: 6px;
+  width: 26px;
+  height: 26px;
   border: 0;
   border-radius: 999px;
   color: white;
-  background: rgba(15, 23, 42, 0.86);
+  background: rgba(15, 23, 42, 0.8);
 }
 
 .empty-media {
   grid-column: 1 / -1;
+  padding: 12px;
   border: 1px dashed rgba(15, 23, 42, 0.18);
   border-radius: 12px;
-  padding: 13px;
-  color: var(--paper-muted);
-  font-size: 0.8rem;
+  color: #64748b;
   text-align: center;
-  background: rgba(255, 255, 255, 0.2);
+  font-size: 0.82rem;
 }
 
-/* ============================================================
-   COMPASS SCREEN
-   ============================================================ */
+/* COMPASS */
 
 .compass-view {
-  grid-template-columns: minmax(360px, 610px) minmax(220px, 320px);
-  justify-content: center;
-  align-items: center;
-  gap: 28px;
-  padding: 34px;
+  min-height: calc(100vh - 110px);
+  place-items: center;
+  padding: 30px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
+  border-radius: 24px;
   background:
-    radial-gradient(circle at 42% 8%, rgba(168, 85, 247, 0.28), transparent 24%),
-    radial-gradient(circle at 18% 30%, rgba(59, 130, 246, 0.18), transparent 24%),
-    linear-gradient(135deg, rgba(4, 10, 22, 0.96), rgba(10, 15, 32, 0.96));
-  box-shadow:
-    0 24px 70px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    radial-gradient(circle at top, rgba(168, 85, 247, 0.28), transparent 32%),
+    rgba(2, 6, 23, 0.82);
 }
 
 .compass-card {
-  position: relative;
-  min-height: 780px;
-  border: 1px solid rgba(168, 85, 247, 0.24);
-  border-radius: 28px;
+  width: min(620px, 100%);
   padding: 24px;
-  background:
-    radial-gradient(circle at 50% 7%, rgba(168, 85, 247, 0.34), transparent 22%),
-    radial-gradient(circle at 42% 18%, rgba(59, 130, 246, 0.2), transparent 28%),
-    linear-gradient(180deg, rgba(10, 19, 38, 0.96), rgba(5, 10, 22, 0.98));
-  box-shadow:
-    0 0 50px rgba(168, 85, 247, 0.13),
-    0 28px 60px rgba(0, 0, 0, 0.42),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  overflow: hidden;
-}
-
-.compass-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to bottom, rgba(168, 85, 247, 0.18), transparent 26%),
-    radial-gradient(circle at 12% 24%, rgba(96, 165, 250, 0.18), transparent 20%),
-    linear-gradient(to top, rgba(2, 6, 23, 0.7), transparent 38%);
-  pointer-events: none;
-}
-
-.compass-card::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 78px;
-  height: 160px;
-  opacity: 0.45;
-  background:
-    linear-gradient(145deg, transparent 0 35%, rgba(15, 23, 42, 0.95) 36% 39%, transparent 40%),
-    linear-gradient(35deg, transparent 0 28%, rgba(30, 41, 59, 0.92) 29% 33%, transparent 34%),
-    radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.55), transparent 42%);
-  clip-path: polygon(0 42%, 16% 18%, 32% 44%, 48% 12%, 66% 40%, 82% 18%, 100% 44%, 100% 100%, 0 100%);
-  pointer-events: none;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 26px;
+  background: rgba(13, 22, 40, 0.96);
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.42);
 }
 
 .back-button {
-  position: relative;
-  z-index: 2;
-  border: 0;
-  color: var(--text);
+  color: white;
   background: transparent;
-  font-weight: 800;
-  font-size: 1rem;
+  margin-bottom: 16px;
 }
 
 .compass-hero {
-  position: relative;
-  z-index: 2;
   text-align: center;
-  padding: 22px 0 24px;
+  margin-bottom: 24px;
 }
 
 .compass-orb {
-  width: 104px;
-  height: 104px;
-  margin: 0 auto 18px;
-  border-radius: 999px;
+  width: 95px;
+  height: 95px;
   display: grid;
   place-items: center;
-  color: white;
-  font-size: 3rem;
-  border: 2px solid rgba(192, 132, 252, 0.68);
-  background:
-    radial-gradient(circle at 40% 30%, rgba(255, 255, 255, 0.25), transparent 28%),
-    linear-gradient(135deg, rgba(168, 85, 247, 0.32), rgba(37, 99, 235, 0.26));
-  box-shadow:
-    0 0 34px rgba(168, 85, 247, 0.44),
-    inset 0 0 26px rgba(255, 255, 255, 0.08);
+  margin: 0 auto 15px;
+  border-radius: 999px;
+  border: 2px solid rgba(168, 85, 247, 0.75);
+  font-size: 2.7rem;
+  box-shadow: 0 0 35px rgba(168, 85, 247, 0.4);
 }
 
 .compass-hero h1 {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.2rem, 4vw, 3.25rem);
-  letter-spacing: -0.06em;
-  line-height: 1;
+  font-size: 2.5rem;
 }
 
 .compass-hero p {
-  margin-top: 12px;
-  color: var(--text-soft);
-  font-size: 1rem;
-}
-
-.compass-divider {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 26px;
-}
-
-.compass-divider span {
-  width: 140px;
-  height: 2px;
-  border-radius: 999px;
-  background:
-    linear-gradient(90deg, transparent, var(--purple), transparent);
-  box-shadow: 0 0 18px rgba(168, 85, 247, 0.8);
+  color: var(--muted);
+  margin-top: 8px;
 }
 
 .prompt-list {
-  position: relative;
-  z-index: 2;
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .prompt-card {
   width: 100%;
-  min-height: 92px;
   display: grid;
-  grid-template-columns: 64px 1fr 24px;
+  grid-template-columns: 55px 1fr;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
+  padding: 15px;
+  color: white;
   text-align: left;
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 16px;
-  padding: 14px 16px;
-  color: var(--text);
-  background:
-    linear-gradient(180deg, rgba(22, 33, 58, 0.88), rgba(10, 18, 35, 0.88));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 14px 26px rgba(0, 0, 0, 0.2);
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  background: var(--panel-light);
+  border: 1px solid var(--border);
 }
 
 .prompt-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(192, 132, 252, 0.54);
-  box-shadow:
-    0 0 0 3px rgba(168, 85, 247, 0.12),
-    0 20px 34px rgba(0, 0, 0, 0.28);
+  border-color: var(--purple);
+  background: rgba(168, 85, 247, 0.25);
 }
 
-.prompt-icon {
-  width: 58px;
-  height: 58px;
+.prompt-card span {
+  width: 48px;
+  height: 48px;
   display: grid;
   place-items: center;
-  border-radius: 18px;
-  color: white;
-  font-size: 1.8rem;
-  font-weight: 900;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--purple), var(--blue));
+  font-size: 1.5rem;
 }
 
-.purple-icon {
-  background: linear-gradient(135deg, #9333ea, #581c87);
-  box-shadow: 0 0 24px rgba(168, 85, 247, 0.42);
-}
-
-.blue-icon {
-  background: linear-gradient(135deg, #2563eb, #1e3a8a);
-  box-shadow: 0 0 24px rgba(59, 130, 246, 0.42);
-}
-
-.green-icon {
-  background: linear-gradient(135deg, #16a34a, #14532d);
-  box-shadow: 0 0 24px rgba(34, 197, 94, 0.35);
-}
-
-.orange-icon {
-  background: linear-gradient(135deg, #f97316, #9a3412);
-  box-shadow: 0 0 24px rgba(251, 146, 60, 0.35);
-}
-
-.cyan-icon {
-  background: linear-gradient(135deg, #06b6d4, #155e75);
-  box-shadow: 0 0 24px rgba(34, 211, 238, 0.35);
-}
-
-.prompt-copy {
-  display: grid;
-  gap: 5px;
-}
-
-.prompt-copy strong {
-  font-size: 1rem;
-}
-
-.prompt-copy small {
-  color: var(--text-soft);
-  font-size: 0.86rem;
-}
-
-.prompt-arrow {
-  color: var(--text-soft);
-  font-size: 2rem;
-  line-height: 1;
-}
-
-.compass-wide-button {
-  position: relative;
-  z-index: 2;
-  margin-top: 18px;
-  background:
-    linear-gradient(135deg, #9333ea, #2563eb);
-  border-color: rgba(192, 132, 252, 0.5);
-}
-
-/* ============================================================
-   COMPASS NOTES RIGHT SIDE
-   ============================================================ */
-
-.compass-notes {
-  display: grid;
-  gap: 20px;
-}
-
-.note-card {
-  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
-  padding-bottom: 18px;
-}
-
-.note-icon {
+.prompt-card small {
   display: block;
-  margin-bottom: 10px;
-  font-size: 2rem;
-  font-weight: 900;
+  color: var(--muted);
+  margin-top: 4px;
 }
 
-.blue-note {
-  color: var(--blue-bright);
-  text-shadow: 0 0 20px rgba(96, 165, 250, 0.55);
+.compass-wide {
+  margin-top: 16px;
+  background: linear-gradient(135deg, var(--purple), var(--blue));
 }
 
-.purple-note {
-  color: var(--purple-bright);
-  text-shadow: 0 0 20px rgba(192, 132, 252, 0.55);
-}
-
-.green-note {
-  color: var(--green);
-  text-shadow: 0 0 20px rgba(34, 197, 94, 0.45);
-}
-
-.orange-note {
-  color: var(--orange);
-  text-shadow: 0 0 20px rgba(251, 146, 60, 0.45);
-}
-
-.note-card h3 {
-  margin-bottom: 8px;
-  font-size: 1.2rem;
-  line-height: 1.12;
-}
-
-.note-card p {
-  color: var(--text-soft);
-  line-height: 1.45;
-}
-
-/* ============================================================
-   TOAST MESSAGE
-   ============================================================ */
+/* TOAST */
 
 .toast {
   position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 50;
-  max-width: 340px;
-  border-radius: 16px;
-  padding: 14px 16px;
+  right: 22px;
+  bottom: 22px;
+  z-index: 20;
+  max-width: 320px;
+  padding: 13px 15px;
+  border-radius: 14px;
   color: white;
   font-weight: 900;
-  background:
-    linear-gradient(135deg, #2563eb, #1e40af);
-  box-shadow:
-    0 20px 44px rgba(0, 0, 0, 0.4),
-    0 0 28px rgba(59, 130, 246, 0.25);
-  transform: translateY(18px);
+  background: var(--blue);
   opacity: 0;
+  transform: translateY(12px);
   pointer-events: none;
   transition: 0.25s ease;
 }
 
 .toast.show {
-  transform: translateY(0);
   opacity: 1;
+  transform: translateY(0);
 }
 
-/* ============================================================
-   RESPONSIVE DESIGN
-   ============================================================ */
+/* RESPONSIVE */
 
-@media (max-width: 1380px) {
-  .journal-view {
-    grid-template-columns: 245px minmax(0, 1fr);
-  }
-
-  .journal-book {
-    width: min(900px, 100%);
-    min-height: 660px;
-    padding: 24px 30px 34px;
-  }
-
-  .book-page {
-    min-height: 600px;
-    max-height: 600px;
-    padding: 36px;
-  }
-
-  .pen-decoration {
-    display: none;
-  }
-
-  .compass-view {
-    grid-template-columns: minmax(360px, 570px) 260px;
-  }
-}
-
-@media (max-width: 1100px) {
+@media (max-width: 1000px) {
   .top-bar {
     grid-template-columns: 1fr;
   }
 
-  .top-actions,
-  .top-icons {
+  .top-actions {
     justify-content: flex-start;
   }
 
-  .journal-view {
+  #journalView {
     grid-template-columns: 1fr;
   }
 
-  .entries-panel {
-    min-height: auto;
-    border-right: 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .entry-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    overflow: visible;
-  }
-
-  .journal-stage {
-    padding: 32px 18px;
-  }
-
-  .journal-book {
-    width: min(720px, 100%);
+  .book {
     grid-template-columns: 1fr;
-    gap: 18px;
-    padding: 26px;
-  }
-
-  .book-cover {
-    inset: 8px;
-  }
-
-  .book-spine,
-  .bookmark-ribbon {
-    display: none;
+    gap: 14px;
   }
 
   .preview-page,
   .writing-page {
-    border-radius: 24px;
+    border-radius: 22px;
+  }
+
+  .page {
     min-height: auto;
     max-height: none;
   }
-
-  .compass-view {
-    grid-template-columns: 1fr;
-    align-items: start;
-  }
-
-  .compass-card {
-    min-height: auto;
-  }
-
-  .compass-notes {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 650px) {
   .app-shell {
     padding: 10px;
-  }
-
-  .top-bar,
-  .journal-view,
-  .compass-view {
-    border-radius: 20px;
   }
 
   .top-actions {
@@ -1498,63 +688,20 @@ select:focus {
     width: 100%;
   }
 
-  .entries-panel {
-    padding: 18px 14px;
+  .journal-area {
+    padding: 12px;
   }
 
-  .entry-list {
+  .page {
+    padding: 22px;
+  }
+
+  .field-row,
+  .media-grid {
     grid-template-columns: 1fr;
   }
 
-  .journal-stage {
-    padding: 18px 10px;
-  }
-
-  .journal-book {
-    padding: 14px;
-  }
-
-  .book-cover {
-    display: none;
-  }
-
-  .book-page {
-    padding: 24px;
-  }
-
-  .field-grid,
-  .media-grid,
-  .preview-media-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .writing-footer {
-    align-items: flex-start;
+  .upload-box {
     flex-direction: column;
-  }
-
-  .compass-view {
-    padding: 14px;
-  }
-
-  .compass-card {
-    padding: 18px;
-    border-radius: 22px;
-  }
-
-  .prompt-card {
-    grid-template-columns: 52px 1fr 18px;
-    gap: 12px;
-    padding: 13px;
-  }
-
-  .prompt-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 15px;
-  }
-
-  .compass-notes {
-    grid-template-columns: 1fr;
   }
 }
